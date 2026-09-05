@@ -1,15 +1,9 @@
 VENV = venv_a_maze_ing
-PYTHON = $(VENV)/bin/python
+PYTHON = $(VENV)/bin/python3
 PIP = $(VENV)/bin/pip
 
 $(VENV):
 	python3 -m venv $(VENV)
-
-install: $(VENV)
-	$(PIP) install -r requirements.txt
-
-run: $(VENV)
-	$(PYTHON) main.py
 
 # Install activity dependencies using pip, uv, pipx, or any other package manager of your choice.
 install : $(VENV)
@@ -18,7 +12,7 @@ install : $(VENV)
 
 # Execute the main script of your activity (e.g., via Python interpreter).
 run :$(VENV)
-	$(PYTHON) a_maze_ing.python
+	$(PYTHON) a_maze_ing.py config.txt
 
 # Run the main script in debug mode using Python’s built-in debugger (e.g., pdb).
 debug :
