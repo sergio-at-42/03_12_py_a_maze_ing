@@ -15,7 +15,8 @@ run :$(VENV)
 	$(PYTHON) a_maze_ing.py config.txt
 
 # Run the main script in debug mode using Python’s built-in debugger (e.g., pdb).
-debug :
+debug : $(VENV)
+	$(PYTHON) -m pdb a_maze_ing.py config.txt
 
 # Remove temporary files or caches (e.g., __pycache__, .mypy_cache) to keep the activity environment clean.
 clean :
