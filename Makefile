@@ -18,6 +18,9 @@ run :$(VENV)
 debug : $(VENV)
 	$(PYTHON) -m pdb a_maze_ing.py config.txt
 
+package : $(VENV)
+	$(PYTHON) -m build
+
 # Remove temporary files or caches (e.g., __pycache__, .mypy_cache) to keep the activity environment clean.
 clean :
 	rm --force --recursive __pycache__
