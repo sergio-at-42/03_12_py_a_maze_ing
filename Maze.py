@@ -45,7 +45,6 @@ class Maze:
             with open(argv[1], "r") as config_file:
                 config_line = config_file.readline()
                 while config_line:
-                    # if config_line[0] != "#":
                     key = config_line.partition("=")[0]
                     value = config_line.partition("=")[2]
                     if self.config_value_to_dict(key, value):
