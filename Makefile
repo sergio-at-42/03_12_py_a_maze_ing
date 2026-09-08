@@ -12,7 +12,7 @@ install : $(VENV)
 
 # Execute the main script of your activity (e.g., via Python interpreter).
 run :$(VENV)
-	$(PYTHON) a_maze_ing.py config.txt
+	@$(PYTHON) a_maze_ing.py config.txt
 
 # Run the main script in debug mode using Python’s built-in debugger (e.g., pdb).
 debug : $(VENV)
