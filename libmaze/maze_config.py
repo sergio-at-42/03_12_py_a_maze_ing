@@ -1,19 +1,18 @@
 from email.policy import default
 from typing import Any, Self
-from pydantic import BaseModel, Field, ValidationError, model_validator
 from .coord import Coord
 
 
-class MazeConfig(BaseModel):
+class MazeConfig():
 
     def __init__(self, config_file_name: str) -> None:
         # attributs de configurations
-        self.width: int = Field(..., ge=0, default=16)
-        self.height: int = Field(..., ge=0, default=16)
+        self.width: int = 16
+        self.height: int = 16
         self.entry: Coord = Coord(0, 0)
         self.exit:  Coord = Coord(15, 15)
-        self.output_file: str = Field(..., default="maze.txt")
-        self.perfect: bool = Field(default=True)
+        self.output_file: str = "maze.txt"
+        self.perfect: bool = True
 
         # Dictionnaire de l'ensemble des attributs de configuration
         self.attr: dict[str, Any] = {}
