@@ -5,8 +5,7 @@ from .coord import Coord
 
 
 class MazeConfig(BaseModel):
-
-    config_file_name: str = Field(default="config.txt")
+    
     width: int = Field(default=16)
     height: int = Field(default=16)
     entry: Coord = Coord(x=0, y=0)
@@ -14,9 +13,12 @@ class MazeConfig(BaseModel):
     output_file: str = Field(default="maze.txt")
     perfect: bool = Field(default=True)
     attr: dict[str, Any] = {}
+    argv: list[str] = []
+    config_file_name: str = Field(default="")
 
     @model_validator(mode='after')
     def config_read_file(self) -> "MazeConfig":
+        self.file_from_argv()
         config_line: str = ""
         try:
             with open(self.config_file_name, "r") as config_file:
@@ -28,8 +30,19 @@ class MazeConfig(BaseModel):
                     self.set_value_to_attr(key, value)
                     config_line = config_file.readline()
         except FileNotFoundError:
-            print(f"<{self.config_file_name}> is not a configuration file.")
+            print(f"No configuration file found.")
         return (self)
+
+    def file_from_argv(self) -> None:
+        try:
+            with open(self.argv[1], "r") as config_file:
+                self.config_file_name = self.argv[1]
+        except IndexError:
+            print("No configuration file provide.")
+            print(f"Usage: {self.argv[0].rpartition("/")[2]} <configuration_file>")
+        except FileNotFoundError:
+            print(f"<{self.argv[1]}> is not a configuration file.")
+            print(f"Usage: {self.argv[0].rpartition("/")[2]} <configuration_file>")
 
     def set_value_to_attr(self, key: str, value: Any) -> bool:
         value_ok = True
