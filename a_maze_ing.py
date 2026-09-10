@@ -23,6 +23,7 @@ def main() -> None:
     config_file_name: str = config_file_exist(sys.argv)
     if config_file_name:
         my_maze: Maze = Maze(config_file_name)
+        my_maze.config.config_display()
 
 if __name__ == "__main__":
     main()
