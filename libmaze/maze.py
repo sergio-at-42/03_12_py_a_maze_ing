@@ -1,6 +1,6 @@
 from typing import Any, Self
 
-from .maze_config import MazeConfig
+from libmaze import MazeConfig, Color
 
 
 class Maze:
