@@ -1,4 +1,5 @@
 from typing import Any, Self
+import sys
 from pydantic import BaseModel, Field, ValidationError, model_validator
 
 from .coord import Coord
@@ -12,9 +13,9 @@ class MazeConfig(BaseModel):
     exit:  Coord = Coord(x=15, y=15)
     output_file: str = Field(default="maze.txt")
     perfect: bool = Field(default=True)
-    attr: dict[str, Any] = {}
     argv: list[str] = []
     config_file_name: str = Field(default="")
+    attr: dict[str, Any] = {}
 
     @model_validator(mode='after')
     def config_read_file(self) -> "MazeConfig":
@@ -22,7 +23,6 @@ class MazeConfig(BaseModel):
         config_line: str = ""
         try:
             with open(self.config_file_name, "r") as config_file:
-                self.attr["CONFIGURATION_FILE_NAME"] = (self.config_file_name)
                 config_line = config_file.readline()
                 while config_line:
                     key = config_line.partition("=")[0]
@@ -31,18 +31,22 @@ class MazeConfig(BaseModel):
                     config_line = config_file.readline()
         except FileNotFoundError:
             print(f"No configuration file found.")
+        self.set_attr_to_dict()
         return (self)
 
     def file_from_argv(self) -> None:
         try:
+            self.argv=sys.argv
             with open(self.argv[1], "r") as config_file:
                 self.config_file_name = self.argv[1]
         except IndexError:
             print("No configuration file provide.")
             print(f"Usage: {self.argv[0].rpartition("/")[2]} <configuration_file>")
+            print("Default values used to create the maze.")
         except FileNotFoundError:
             print(f"<{self.argv[1]}> is not a configuration file.")
             print(f"Usage: {self.argv[0].rpartition("/")[2]} <configuration_file>")
+            print("Default values used to create the maze.")
 
     def set_value_to_attr(self, key: str, value: Any) -> bool:
         value_ok = True
@@ -50,32 +54,37 @@ class MazeConfig(BaseModel):
         match key:
             case "WIDTH":
                 self.width = int(value)
-                self.attr["WIDTH"] = self.width
             case "HEIGHT":
                 self.height = int(value)
-                self.attr["HEIGHT"] = self.height
             case "ENTRY":
                 coord: list[str] = value.partition(",")
                 self.entry.x = int(coord[0])
                 self.entry.y = int(coord[2])
-                self.attr["ENTRY"] = (self.entry.x, self.entry.y)
             case "EXIT":
                 coord: list[str] = value.partition(",")
                 self.exit.x = int(coord[0])
                 self.exit.y = int(coord[2])
-                self.attr["EXIT"] = (self.exit.x, self.exit.y)
             case "OUTPUT_FILE":
                 self.output_file = value.strip()
-                self.attr["OUTPUT_FILE"] = self.output_file
             case "PERFECT":
                 self.perfect = bool(value)
-                self.attr["PERFECT"] = self.perfect
             case _:
                 value_ok = False
         return (value_ok)
 
+    def set_attr_to_dict(self) -> None:
+        self.attr["WIDTH"] = self.width
+        self.attr["HEIGHT"] = self.height
+        self.attr["ENTRY"] = (self.entry.x, self.entry.y)
+        self.attr["EXIT"] = (self.exit.x, self.exit.y)
+        self.attr["OUTPUT_FILE"] = self.output_file
+        self.attr["PERFECT"] = self.perfect
+        self.attr["ARGV"] = (self.argv)
+        self.attr["CONFIGURATION_FILE_NAME"] = (self.config_file_name)
+
     def config_display(self) -> None:
         print("Configuration attributes :")
+        print(f"ARGV = {self.argv}")
         print(f"CONFIGURATION_FILE_NAME = {self.config_file_name}")
         print(f"WIDTH = {self.width}")
         print(f"HEIGHT = {self.height}")
