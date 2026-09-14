@@ -1,5 +1,8 @@
+# Virtual Environment
 VENV = venv_a_maze_ing
+# Python3 in virtual environment
 PYTHON = $(VENV)/bin/python3
+# PIP in virtual environment
 PIP = $(VENV)/bin/pip
 
 $(VENV):
