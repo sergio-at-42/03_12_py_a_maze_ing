@@ -2,9 +2,10 @@ from enum import Enum
 
 
 class Color(Enum):
+
     # Reset color
     RESET = "\033[0m"       # Reset
-    # Bqsic colors
+    # Basic colors
     BLACK = "\033[30m"      # Black
     RED = "\033[31m"        # Red
     GREEN = "\033[32m"      # Green
