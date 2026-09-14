@@ -10,7 +10,8 @@ def main() -> None:
 
     my_maze: Maze = Maze()
 
-    my_maze.config.config_display()
+    # my_maze.config.config_display()
+    my_maze.display()
 
 if __name__ == "__main__":
     main()

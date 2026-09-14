@@ -7,14 +7,15 @@ from .coord import Coord
 
 class MazeConfig(BaseModel):
     
-    width: int = Field(default=16)
-    height: int = Field(default=16)
+    width: int = Field(ge=0, default=16)
+    height: int = Field(ge=0, default=16)
     entry: Coord = Coord(x=0, y=0)
     exit:  Coord = Coord(x=15, y=15)
     output_file: str = Field(default="maze.txt")
     perfect: bool = Field(default=True)
     argv: list[str] = []
     config_file_name: str = Field(default="")
+    seed: int = Field(ge=0, default=16)
     attr: dict[str, Any] = {}
 
     @model_validator(mode='after')
@@ -68,6 +69,8 @@ class MazeConfig(BaseModel):
                 self.output_file = value.strip()
             case "PERFECT":
                 self.perfect = bool(value)
+            case "SEED":
+                self.seed = int(value)
             case _:
                 value_ok = False
         return (value_ok)
@@ -81,6 +84,7 @@ class MazeConfig(BaseModel):
         self.attr["PERFECT"] = self.perfect
         self.attr["ARGV"] = (self.argv)
         self.attr["CONFIGURATION_FILE_NAME"] = (self.config_file_name)
+        self.attr["SEED"] = self.seed
 
     def config_display(self) -> None:
         print("Configuration attributes :")
@@ -92,6 +96,7 @@ class MazeConfig(BaseModel):
         print(f"EXIT = {(self.exit.x, self.exit.y)}")
         print(f"OUTPUT_FILE = {self.output_file}")
         print(f"PERFECT = {self.perfect}")
+        print(f"SEED = {self.seed}")
         print("Configuration attributes dictionary :")
         print(f"obj.config.attr = {self.attr}")
 
