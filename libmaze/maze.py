@@ -12,7 +12,9 @@ class Maze:
         self.cell: str
         self.maze_hexa: list[str]
         self.grid: list[list[int]] = [[0]*(self.config.width*2+1) for _ in range(self.config.height*2+1)]
-        self.wall_type: str = "double"    # "double" "simple" "unique"
+        self.wall_type: str = "simple"    # "double" "simple" "unique"
+        # self.wall_color: Color = BLUE
+        # self.wall_bkcolor: Color = BG_BLACK
         self.wall: list[str] = [" "] * 16
         self.generate_new()
         # self.init_wall()
@@ -21,27 +23,8 @@ class Maze:
         for line in range(self.config.height):
             for col in range(len(self.maze_hexa[line])):
                 cell = int(self.maze_hexa[line][col], 16)
-                # if cell//8:
-                #     cell -= 8
-                #     self.grid[line*2][col*2] += 8
-                #     self.grid[line*2+1][col*2] = 8
-                #     self.grid[line*2+2][col*2] += 8
-                # if cell//4:
-                #     cell -= 4
-                #     self.grid[line*2+2][col*2] += 4
-                #     self.grid[line*2+2][col*2+1] = 4
-                #     self.grid[line*2+2][col*2+2] += 4
-                # if cell//2:
-                #     cell -= 2
-                #     self.grid[line*2][col*2+2] += 2
-                #     self.grid[line*2+1][col*2+2] = 2
-                #     self.grid[line*2+2][col*2+2] += 2
-                # if cell:
-                #     self.grid[line*2][col*2] += 1
-                #     self.grid[line*2][col*2+1] = 1
-                #     self.grid[line*2][col*2+2] += 1
                 if cell == 15:
-                    self.grid[line*2+1][col*2+1] = -1
+                    self.grid[line*2+1][col*2+1] = 1
                 if cell//8:
                     cell -= 8
                     self.grid[line*2][col*2] = 1
@@ -66,7 +49,6 @@ class Maze:
         self.maze_hexa_to_grid()
         for line in range(self.config.height*2+1):
             for col in range(self.config.width*2+1):
-                # print(self.wall[self.grid[line][col]])
                 if self.grid[line][col] > 0:
                     print(self.construct_wall(line, col), end="")
                 else:
@@ -86,7 +68,7 @@ class Maze:
             "85684117AFC6857FAC1383D06",
             "C53AD043AFFFAFFF856AA8143",
             "91441294297FAFD51142C6BAA",
-            "AA912AC3843FAFFF82856D52A",
+            "AA912AC3843FAFFF82856D42A",
             "842A8692A92B8517C4451552A",
             "816AC384468285293917A9542",
             "C416928513C443A828456C3BA",
