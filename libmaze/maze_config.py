@@ -9,7 +9,7 @@ class MazeConfig(BaseModel):
     
     width: int = Field(ge=0, default=16)
     height: int = Field(ge=0, default=16)
-    entry: Coord = Coord(x=0, y=0)
+    entry: Coord = Coord(x=2, y=2)
     exit:  Coord = Coord(x=15, y=15)
     output_file: str = Field(default="maze.txt")
     perfect: bool = Field(default=True)

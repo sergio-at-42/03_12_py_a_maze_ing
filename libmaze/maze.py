@@ -44,10 +44,15 @@ class Maze:
 
     def display(self) -> None:
         self.maze_hexa_to_grid()
+        print("\033[H\033[2J", end="")
         for line in range(self.config.height*2+1):
             for col in range(self.config.width*2+1):
                 print(self.construct_wall(line, col), end="")
             print()
+        print(f"\033[{self.config.entry.y};{self.config.entry.x}H", end="")
+        print(f"{Color.RED.value}{Color.BOLD.value}S{Color.RESET.value}", end="")
+        print(f"\033[{self.config.exit.y};{self.config.exit.x}H", end="")
+        print(f"{Color.MAGENTA.value}{Color.BOLD.value}F{Color.RESET.value}", end="")
 
     def construct_wall(self, line: int, col: int) -> str:
         if self.grid[line][col] < 0:
@@ -91,3 +96,20 @@ class Maze:
             "86956951692C1455416928552",
             "C545545456545555454444556"
         ]
+
+    def write_output_file(self) -> bool:
+        write_ok: bool = False
+        try:
+            with open(self.config.output_file, "w") as output_file:
+                output_file.write("# Maze generated with a_maze_ing project\n")
+                for line in self.maze_hexa:
+                    output_file.write(f"{line}\n")
+                output_file.write("\n")
+                output_file.write("# Way from Entry to Exit\n")
+                output_file.write(f"N N W W W S S S S S S W W W N N N N W S S S S S S S S S E E E S W W W W W W N W S S\n")
+                write_ok = True
+        except Exception as e:
+            print(f"{e}")
+            write_ok = False
+        return (write_ok)
+

@@ -8,9 +8,9 @@ from .coord import Coord
 
 class Wall(BaseModel):
 
-    type: WallType = WallType.SIMPLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
-    color: Color = Color.MAGENTA
-    bkcolor: Color = Color.BG_GREEN
+    type: WallType = WallType.DOUBLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
+    color: Color = Color.YELLOW
+    bkcolor: Color = Color.BG_BLUE
     element: list[str] = [" "] * 16
 
     @model_validator(mode='after')
