@@ -20,7 +20,7 @@ class MazeConfig(BaseModel):
     seed: int = Field(ge=0, default=16)
     entry_icon: str = "🏁" # U+1F3C1
     exit_icon: str = "🍾" # U+1F37E
-    wall_type: WallType = WallType.DOUBLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
+    wall_type: WallType = WallType.SIMPLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
     wall_color: Color = Color.YELLOW
     wall_bkcolor: Color = Color.BG_BLUE
     attr: dict[str, Any] = {}

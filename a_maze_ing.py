@@ -14,7 +14,7 @@ def main() -> None:
     # my_maze.config.config_display()
     my_maze.display()
 
-    my_menu.display()
+    my_menu.input_loop()
 
     my_maze.write_output_file()
 

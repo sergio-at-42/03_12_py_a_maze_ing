@@ -13,7 +13,7 @@ class Maze:
         self.cell: str
         self.maze_hexa: list[str]
         self.grid: list[list[int]] = [[0]*(self.config.width*2+1) for _ in range(self.config.height*2+1)]
-        self.wall: Wall = Wall()
+        self.wall: Wall = Wall(self.config.wall_type, self.config.wall_color, self.config.wall_bkcolor)
         self.generate_new()
 
     def maze_hexa_to_grid(self) -> None:
@@ -44,6 +44,7 @@ class Maze:
 
     def display(self) -> None:
         self.maze_hexa_to_grid()
+        self.wall.init_wall(self.config.wall_type, self.config.wall_color, self.config.wall_bkcolor)
         print("\033[H\033[2J", end="")
         for line in range(self.config.height*2+1):
             for col in range(self.config.width*2+1):

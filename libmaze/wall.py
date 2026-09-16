@@ -1,20 +1,25 @@
 from typing import Any, Self
-from pydantic import BaseModel, Field, ValidationError, model_validator
 
 from .color import Color
 from .wall_type import WallType
 from .coord import Coord
 
 
-class Wall(BaseModel):
+class Wall():
 
-    type: WallType = WallType.DOUBLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
-    color: Color = Color.YELLOW
-    bkcolor: Color = Color.BG_BLUE
-    element: list[str] = [" "] * 16
+    def __init__(self, type: WallType, color: Color, bkcolor: Color):
+        self.type: WallType = WallType.SIMPLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
+        self.color: Color = Color.YELLOW
+        self.bkcolor: Color = Color.BG_BLUE
+        self.element: list[str] = [" "] * 16
+        self.init_wall(type, color, bkcolor)
 
-    @model_validator(mode='after')
-    def init_wall(self) -> "Wall":
+    def init_wall(self, type: WallType, color: Color, bkcolor: Color) -> None:
+
+        self.type = type
+        self.color = color
+        self.bkcolor = bkcolor
+
         match self.type:
 
             case WallType.SIMPLE:
@@ -55,8 +60,6 @@ class Wall(BaseModel):
 
             case _:
                 self.element[0] = self.type.value
-
-        return (self)
 
     def construct(self, element: int) -> str:
         block = False
