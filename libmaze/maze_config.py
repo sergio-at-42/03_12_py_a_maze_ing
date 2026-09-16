@@ -2,6 +2,8 @@ from typing import Any, Self
 import sys
 from pydantic import BaseModel, Field, ValidationError, model_validator
 
+from .color import Color
+from .wall_type import WallType
 from .coord import Coord
 
 
@@ -18,6 +20,9 @@ class MazeConfig(BaseModel):
     seed: int = Field(ge=0, default=16)
     entry_icon: str = "🏁" # U+1F3C1
     exit_icon: str = "🍾" # U+1F37E
+    wall_type: WallType = WallType.DOUBLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
+    wall_color: Color = Color.YELLOW
+    wall_bkcolor: Color = Color.BG_BLUE
     attr: dict[str, Any] = {}
 
     @model_validator(mode='after')
