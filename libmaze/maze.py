@@ -50,9 +50,9 @@ class Maze:
                 print(self.construct_wall(line, col), end="")
             print()
         print(f"\033[{self.config.entry.y};{self.config.entry.x}H", end="")
-        print(f"{Color.RED.value}{Color.BOLD.value}S{Color.RESET.value}", end="")
+        print(f"{Color.RED.value}{Color.BOLD.value}{self.config.entry_icon}{Color.RESET.value}", end="")
         print(f"\033[{self.config.exit.y};{self.config.exit.x}H", end="")
-        print(f"{Color.MAGENTA.value}{Color.BOLD.value}F{Color.RESET.value}", end="")
+        print(f"{Color.MAGENTA.value}{Color.BOLD.value}{self.config.exit_icon}{Color.RESET.value}", end="")
 
     def construct_wall(self, line: int, col: int) -> str:
         if self.grid[line][col] < 0:

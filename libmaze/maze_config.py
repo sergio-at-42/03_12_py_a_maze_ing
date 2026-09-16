@@ -16,6 +16,8 @@ class MazeConfig(BaseModel):
     argv: list[str] = []
     config_file_name: str = Field(default="")
     seed: int = Field(ge=0, default=16)
+    entry_icon: str = "🏁" # U+1F3C1
+    exit_icon: str = "🍾" # U+1F37E
     attr: dict[str, Any] = {}
 
     @model_validator(mode='after')
