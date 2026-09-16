@@ -9,13 +9,15 @@ class MazeConfig(BaseModel):
     
     width: int = Field(ge=0, default=16)
     height: int = Field(ge=0, default=16)
-    entry: Coord = Coord(x=0, y=0)
+    entry: Coord = Coord(x=2, y=2)
     exit:  Coord = Coord(x=15, y=15)
     output_file: str = Field(default="maze.txt")
     perfect: bool = Field(default=True)
     argv: list[str] = []
     config_file_name: str = Field(default="")
     seed: int = Field(ge=0, default=16)
+    entry_icon: str = "🏁" # U+1F3C1
+    exit_icon: str = "🍾" # U+1F37E
     attr: dict[str, Any] = {}
 
     @model_validator(mode='after')
