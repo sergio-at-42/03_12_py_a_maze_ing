@@ -11,7 +11,7 @@ class Wall():
         self.type: WallType = WallType.SIMPLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
         self.color: Color = Color.YELLOW
         self.bkcolor: Color = Color.BG_BLUE
-        self.element: list[str] = [" "] * 16
+        self.element: list[str] = [" "] * 17
         self.init_wall(type, color, bkcolor)
 
     def init_wall(self, type: WallType, color: Color, bkcolor: Color) -> None:
@@ -61,11 +61,13 @@ class Wall():
             case _:
                 self.element[0] = self.type.value
 
+        self.element[16] = self.element[0]
+
     def construct(self, element: int) -> str:
         block = False
         if element == -1:
             block = True
-            element = 0
+            element = 16
         if self.type != WallType.SIMPLE and self.type != WallType.DOUBLE:
             element = 0
         wall_element = f"{self.color.value}{self.bkcolor.value}{Color.INVERSION.value if block else ""}{Color.BLINKING.value if block else ""}{self.element[element]}{Color.RESET.value}"
