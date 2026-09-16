@@ -6,7 +6,7 @@ from .coord import Coord
 from .color import Color
 
 
-class Maze:
+class Maze():
 
     def __init__(self) -> None:
         self.config: MazeConfig = MazeConfig()

@@ -1,15 +1,12 @@
-from typing import Any, Self
 import sys, termios, tty
 
 from .maze import Maze
 from .wall import Wall
-from .coord import Coord
 from .color import Color
 from .wall_type import WallType
 
 
-
-class MazeMenu:
+class MazeMenu():
 
     def __init__(self, maze: Maze) -> None:
         self.maze: Maze = maze
