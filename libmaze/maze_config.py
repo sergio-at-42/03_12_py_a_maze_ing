@@ -1,4 +1,4 @@
-from typing import Any, Self
+from typing import Any
 import sys
 from pydantic import BaseModel, Field, ValidationError, model_validator
 
