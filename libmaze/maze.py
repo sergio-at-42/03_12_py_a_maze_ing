@@ -1,7 +1,7 @@
 from typing import Any, Self
 
 from .maze_config import MazeConfig
-from .way import Way
+from .maze_way import MazeWay
 from .wall import Wall
 from .coord import Coord
 from .color import Color
@@ -15,7 +15,7 @@ class Maze():
         self.maze_hexa: list[str]
         self.grid: list[list[int]] = [[0]*(self.config.width*3+1) for _ in range(self.config.height*2+1)]
         self.wall: Wall = Wall(self.config.wall_type, self.config.wall_color, self.config.wall_bkcolor)
-        self.way: Way = Way(self.config.entry, self.config.exit)
+        self.way: MazeWay = MazeWay(self.config)
         self.generate_new()
 
     def maze_hexa_to_grid(self) -> None:
@@ -53,6 +53,8 @@ class Maze():
             for col in range(self.config.width*3+1):
                 print(self.construct_wall(line, col), end="")
             print()
+        if self.way.visible:
+            self.way.display()
         self.way.display_entry()
         self.way.display_exit()
 

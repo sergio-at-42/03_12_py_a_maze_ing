@@ -14,6 +14,8 @@ class MazeMenu():
 
     def menu_choice(self, choice: str) -> bool:
         stay_in_loop: bool = True
+        refresh_maze: bool = False
+        is_way_visible: bool = False
         match choice:
             case "Q":
                 self.maze.config.wall_color = Color.BLACK
@@ -64,11 +66,16 @@ class MazeMenu():
             case "8":
                 self.maze.config.wall_type = WallType.DOUBLE
             case "N":
-                self.error_text = "<N> SHOW WAY : Feature coming soon"
+                self.maze.way.visible = True
+                self.maze.way.speed = 10
+                # self.error_text = "<N> SHOW WAY : Feature coming soon"
             case "M":
-                self.error_text = "<M> HIDE WAY : Feature coming soon"
+                self.maze.way.visible = False
+                # self.error_text = "<M> HIDE WAY : Feature coming soon"
             case "X":
                 stay_in_loop = False
+        # if choice not in ["N", "M", "X"]:
+        #     self.maze.display()
         return (stay_in_loop)
 
     def input_loop(self) -> None:

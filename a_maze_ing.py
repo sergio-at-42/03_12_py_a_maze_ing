@@ -3,10 +3,12 @@
 import sys
 from typing import Any, Self
 
-from libmaze import Maze, MazeMenu
+from libmaze import Maze, MazeMenu, Color
 
 
 def main() -> None:
+
+    print(Color.CURSOR_OFF)
 
     my_maze: Maze = Maze()
     my_menu: MazeMenu = MazeMenu(my_maze)
@@ -19,6 +21,7 @@ def main() -> None:
     my_maze.write_output_file()
 
     print(f"\033[{my_maze.config.height*2+7};1H", end="")
+    print(Color.RESET)
 
 if __name__ == "__main__":
     main()
