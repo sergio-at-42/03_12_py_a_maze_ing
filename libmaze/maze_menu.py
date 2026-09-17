@@ -10,6 +10,7 @@ class MazeMenu():
 
     def __init__(self, maze: Maze) -> None:
         self.maze: Maze = maze
+        self.error_text: str = ""
 
     def menu_choice(self, choice: str) -> bool:
         stay_in_loop: bool = True
@@ -62,6 +63,10 @@ class MazeMenu():
                 self.maze.config.wall_type = WallType.SIMPLE
             case "8":
                 self.maze.config.wall_type = WallType.DOUBLE
+            case "N":
+                self.error_text = "<N> SHOW WAY : Feature coming soon"
+            case "M":
+                self.error_text = "<M> HIDE WAY : Feature coming soon"
             case "X":
                 stay_in_loop = False
         return (stay_in_loop)
@@ -77,7 +82,7 @@ class MazeMenu():
 
         # Wall color
         print(f"\033[{self.maze.config.height*2+2};1H", end="")
-        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}      WALL COLOR      ", end="")
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}      WALL COLOR       ", end="")
         print(f"{Color.BG_BLACK.value}{Color.BOLD.value}  <Q>  ", end="")
         print(f"{Color.BG_RED.value}{Color.BOLD.value}  <W>  ", end="")
         print(f"{Color.BG_GREEN.value}{Color.BOLD.value}  <E>  ", end="")
@@ -89,7 +94,7 @@ class MazeMenu():
         print(f"{Color.RESET.value}")
 
         # Background color
-        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}   BACKGROUND COLOR   ", end="")
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value} WALL BACKGROUND COLOR ", end="")
         print(f"{Color.BG_BLACK.value}{Color.BOLD.value}  <A>  ", end="")
         print(f"{Color.BG_RED.value}{Color.BOLD.value}  <S>  ", end="")
         print(f"{Color.BG_GREEN.value}{Color.BOLD.value}  <D>  ", end="")
@@ -101,21 +106,30 @@ class MazeMenu():
         print(f"{Color.RESET.value}")
 
         # Wall type
-        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}      WALL TYPE       ", end="")
-        print(f"░░<1>░░", end="")
-        print(f"▒▒<2>▒▒", end="")
-        print(f"▓▓<3>▓▓", end="")
-        print(f"██<4>██", end="")
-        print(f"##<5>##", end="")
-        print(f"@@<6>@@", end="")
-        print(f"┼┼<7>┼┼", end="")
-        print(f"╬╬<8>╬╬", end="")
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}       WALL TYPE       ", end="")
+        print(f" ░<1>░ ", end="")
+        print(f" ▒<2>▒ ", end="")
+        print(f" ▓<3>▓ ", end="")
+        print(f" █<4>█ ", end="")
+        print(f" #<5># ", end="")
+        print(f" @<6>@ ", end="")
+        print(f" ┼<7>┼ ", end="")
+        print(f" ╬<8>╬ ", end="")
         print(f"{Color.RESET.value}")
 
-        # Wall type
-        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}", end="")
-        print(f"                                 <X> TO EXIT                                  ", end="")
+        # Display way
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}      DISPLAY WAY      ", end="")
+        print(f"        <N> SHOW WAY        ", end="")
+        print(f"        <M> HIDE WAY        ", end="")
         print(f"{Color.RESET.value}")
+
+        # Exit
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}", end="")
+        print(f"                                  <X> TO EXIT                                  ", end="")
+        print(f"{Color.RESET.value}")
+
+        # Error
+        self.display_error() if len(self.error_text) else self.hide_error()
 
     def input_one_key(self) -> str:
         key: str = ""
@@ -127,3 +141,13 @@ class MazeMenu():
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return (key)
+
+    def display_error(self) -> None:
+        print(f"{Color.RED.value}{Color.BLINKING.value}{Color.BOLD.value}", end="")
+        print(f"{self.error_text}", end="")
+        print(f"{Color.RESET.value}")
+        self.error_text = ""
+
+    def hide_error(self) -> None:
+        print(f"{" " * len(self.error_text)}", end="")
+        print(f"{Color.RESET.value}")
