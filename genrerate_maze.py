@@ -1,5 +1,3 @@
-from libmaze.maze_config import MazeConfig
-from libmaze.coord import Coord
 import random
 N, E, S, W = 1, 2, 4, 8
 OPPOSITE = {N: S, S: N, E: W, W: E}
@@ -14,23 +12,31 @@ PATTERN_42 = [
 PATTERN_W = len(PATTERN_42[0])   # 9
 PATTERN_H = len(PATTERN_42)     # 5
 
-
+# dans maze ou dans main il faut mettre
+# generator = MazeGenerator(
+#     width=config.width,
+#     height=config.height,
+#     entry=(config.entry.x, config.entry.y),
+#     exit=(config.exit.x, config.exit.y),
+#     seed=config.seed,
+#     perfect=config.perfect,
+# )
 class MazeGenerator:
-    def __init__(self, config: MazeConfig) -> None:
-        self.config: MazeConfig = config
-        self.width: int = config.width
-        self.height: int = config.height
-        self.entry: Coord = config.entry
-        self.exit: Coord = config.exit
-        self.seed: int = config.seed
-        self.perfect: bool = config.perfect
+    def __init__(self, width: int, height: int,
+                 entry: tuple[int, int], exit: tuple[int, int], seed: int = 0, perfect: bool = True,) -> None:
+        self.width = width
+        self.height = height
+        self.entry = entry
+        self.exit = exit
+        self.seed = seed
+        self.perfect = perfect
         # grid representation of the maze, where each cell is represented by a
         # 4-bit integer
         self.grid: list[list[int]] = [
             [0b1111 for _ in range(self.width)]
             for _ in range(self.height)
         ]
-        self._solution_path: list[Coord] = []
+        self._solution_path: list[tuple[int, int]] = []
 
 
     def check_neighbors(
@@ -86,9 +92,8 @@ class MazeGenerator:
 
     def dfs(self) -> None:
         """ Depth-first search to generate the maze """
-        rng = random.Random(self.seed)
         visited = [[False] * self.width for _ in range(self.height)]
-        start = (self.entry.x, self.entry.y)
+        start = self.entry
         stack: list[tuple[int, int]] = [start]
         visited[start[1]][start[0]] = True
 
@@ -98,31 +103,41 @@ class MazeGenerator:
             if not neighbors:
                 stack.pop()
                 continue
-            direction, nx, ny = rng.choice(neighbors)
+            direction, nx, ny = self.rng.choice(neighbors)
             self.brick_walls(x, y, direction, nx, ny)
             visited[ny][nx] = True
             stack.append((nx, ny))
-
-
+            
     def generate(self) -> None:
+        self.rng = random.Random(self.seed)
         self.reserved = self.set_pattern()
-        entry_xy = (self.entry.x, self.entry.y)
-        exit_xy = (self.exit.x, self.exit.y)
+        entry_xy = self.entry
+        exit_xy = self.exit
         if entry_xy in self.reserved or exit_xy in self.reserved:
             raise ValueError(
                 "Entry or exit coordinates fall inside the '42' pattern; "
                 "adjust the maze size or entry/exit coordinates."
             )
         self.dfs()
+        # if not self.perfect:
+        #     self.braid()
 
-    def  pacman_mode(self) -> None:
+
+
+
+
+
+
+
+
+    # def  pacman_mode(self) -> None:
 # 4 coins + centre = corridors ouverts
 # Au moins 2 routes indépendantes (donc au moins 2 boucles, pas juste une)
 # Dead-ends rares, idéalement zéro
 # Toujours respecter la contrainte largeur ≤ 2 cellules (déjà valable pour le DFS pur, mais il faut la revalider après ajout de boucles)
 
 
-    def braid()->None :
+    # def braid()->None :
 # Compter les voisins accessibles en testant chaque direction avec cell & jdirection == 0 — plus explicite et réutilise directement N,E,S,W
 # create a CellStack (LIFO) to hold a list of cell locations 
 # set TotalCells = number of cells in grid 
