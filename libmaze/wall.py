@@ -61,16 +61,15 @@ class Wall():
             case _:
                 self.element[0] = self.type.value
 
-        self.element[16] = self.element[0]
+        self.element[16] = "\U0001F6BB"   # \U0001FAA9   \U00002622   \U0001F6BB
 
     def construct(self, element: int) -> str:
         block = False
-        if element == -1:
+        if element == 16:
             block = True
-            element = 16
-        if self.type != WallType.SIMPLE and self.type != WallType.DOUBLE:
+        elif self.type != WallType.SIMPLE and self.type != WallType.DOUBLE:
             element = 0
-        wall_element = f"{self.color.value}{self.bkcolor.value}{Color.INVERSION.value if block else ""}{Color.BLINKING.value if block else ""}{self.element[element]}{Color.RESET.value}"
+        wall_element = f"{self.color.value}{self.bkcolor.value}{Color.INVERSION.value if block else ""}{Color.BLINKING.value if block else ""}{self.element[element]}{Color.RESET.value}{Color.CURSOR_OFF.value}"
         return (wall_element)
 
 # ╔═╦╗ ┌─┬┐ ═ ─

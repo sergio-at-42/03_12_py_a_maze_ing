@@ -24,9 +24,14 @@ class Color(Enum):
     BG_CYAN = "\033[46m"    # Cyan
     BG_WHITE = "\033[47m"   # White
 
+    # Style
     BOLD = "\033[1m"	    # Bold
     DIMMED = "\033[2m"	    # Dimmed
     ITALIC = "\033[3m"	    # Italic
     UNDERLINE = "\033[4m"   # Underlined
     BLINKING = "\033[5m"    # Blinking
     INVERSION = "\033[7m"   # Foreground/background inversion
+
+    # Cursor Mode
+    CURSOR_OFF = "\033[?25l"
+    CURSOR_ON = "\033[?25h"
