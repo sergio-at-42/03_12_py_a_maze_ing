@@ -87,8 +87,15 @@ class MazeMenu():
 
     def display(self) -> None:
 
-        # Wall color
+        # Frame top
         print(f"\033[{self.maze.config.height*2+2};1H", end="")
+        print("")
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}", end="")
+        print(f"╔{"═" * 79}╗", end="")
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
+
+        # Wall color
+        self.display_frame_side()
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}      WALL COLOR       ", end="")
         print(f"{Color.BG_BLACK.value}{Color.BOLD.value}  <Q>  ", end="")
         print(f"{Color.BG_RED.value}{Color.BOLD.value}  <W>  ", end="")
@@ -98,9 +105,11 @@ class MazeMenu():
         print(f"{Color.BG_MAGENTA.value}{Color.BOLD.value}  <Y>  ", end="")
         print(f"{Color.BG_CYAN.value}{Color.BOLD.value}  <U>  ", end="")
         print(f"{Color.BG_WHITE.value}{Color.BOLD.value}  <I>  ", end="")
+        self.display_frame_side()
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Background color
+        self.display_frame_side()
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value} WALL BACKGROUND COLOR ", end="")
         print(f"{Color.BG_BLACK.value}{Color.BOLD.value}  <A>  ", end="")
         print(f"{Color.BG_RED.value}{Color.BOLD.value}  <S>  ", end="")
@@ -110,9 +119,11 @@ class MazeMenu():
         print(f"{Color.BG_MAGENTA.value}{Color.BOLD.value}  <H>  ", end="")
         print(f"{Color.BG_CYAN.value}{Color.BOLD.value}  <J>  ", end="")
         print(f"{Color.BG_WHITE.value}{Color.BOLD.value}  <K>  ", end="")
+        self.display_frame_side()
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Wall type
+        self.display_frame_side()
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}       WALL TYPE       ", end="")
         print(f" ░<1>░ ", end="")
         print(f" ▒<2>▒ ", end="")
@@ -122,21 +133,35 @@ class MazeMenu():
         print(f" @<6>@ ", end="")
         print(f" ┼<7>┼ ", end="")
         print(f" ╬<8>╬ ", end="")
+        self.display_frame_side()
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Display path
+        self.display_frame_side()
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}     DISPLAY PATH      ", end="")
         print(f"       <N> SHOW PATH        ", end="")
         print(f"       <M> HIDE PATH        ", end="")
+        self.display_frame_side()
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Exit
+        self.display_frame_side()
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}", end="")
         print(f"                                  <X> TO EXIT                                  ", end="")
+        self.display_frame_side()
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
+
+        # Frame bottom
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}", end="")
+        print(f"╚{"═" * 79}╝", end="")
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Error
         self.display_error() if len(self.error_text) else self.hide_error()
+
+    def display_frame_side(self) -> None:
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}", end="")
+        print("║", end="")
 
     def input_one_key(self) -> str:
         key: str = ""

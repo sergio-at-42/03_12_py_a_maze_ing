@@ -52,19 +52,10 @@ class MazePath():
                 case "W":
                     if self.position.x > 1:
                         self.position.x -= 1
-                        self.wall_path = f"{self.wall.construct(2) * 3}"
-            self.display_position()
+                        self.display_west()
+                        # self.wall_path = f"{self.wall.construct(2) * 3}"
+            # self.display_position()
         self.speed = 0
-
-    def display_position(self) -> None:
-        print(f"\033[{self.position.y * 2};{self.position.x * 3 - 1}H", end="")
-        print(f"{self.maze_config.toto_icon}", end="")
-        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
-        self.display_old_position()
-
-    def display_old_position(self) -> None:
-        print(f"\033[{self.old_position.y * 2};{self.old_position.x * 3 - 1}H", end="")
-        print(f"{Color.RED.value}{self.maze_config.path_icon}{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
     def display_east(self) -> None:
         print(f"\033[{self.position.y * 2};{self.position.x * 3 - 1}H", end="")
@@ -105,3 +96,14 @@ class MazePath():
     def display_exit(self) -> None:
         print(f"\033[{self.maze_config.exit.y * 2};{self.maze_config.exit.x * 3 - 1}H", end="")
         print(f"{Color.MAGENTA.value}{Color.BOLD.value}{self.maze_config.exit_icon}{Color.RESET.value}{Color.CURSOR_OFF.value}")
+
+
+    # def display_position(self) -> None:
+    #     print(f"\033[{self.position.y * 2};{self.position.x * 3 - 1}H", end="")
+    #     print(f"{self.maze_config.toto_icon}", end="")
+    #     print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
+    #     self.display_old_position()
+
+    # def display_old_position(self) -> None:
+    #     print(f"\033[{self.old_position.y * 2};{self.old_position.x * 3 - 1}H", end="")
+    #     print(f"{Color.RED.value}{self.maze_config.path_icon}{Color.RESET.value}{Color.CURSOR_OFF.value}")
