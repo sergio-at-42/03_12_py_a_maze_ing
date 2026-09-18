@@ -20,6 +20,8 @@ class MazeConfig(BaseModel):
     seed: int = Field(ge=0, default=16)
     entry_icon: str = "🏁" # U+1F3C1
     exit_icon: str = "🍾" # U+1F37E
+    toto_icon: str = "\U0001F6BD" # "\U0001F6BD" "\U0001F47E"
+    path_icon: str = "\U0001F4A9" # "\U0001F4A9"
     wall_type: WallType = WallType.SIMPLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
     wall_color: Color = Color.YELLOW
     wall_bkcolor: Color = Color.BG_BLUE

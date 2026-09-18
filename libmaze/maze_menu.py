@@ -98,7 +98,7 @@ class MazeMenu():
         print(f"{Color.BG_MAGENTA.value}{Color.BOLD.value}  <Y>  ", end="")
         print(f"{Color.BG_CYAN.value}{Color.BOLD.value}  <U>  ", end="")
         print(f"{Color.BG_WHITE.value}{Color.BOLD.value}  <I>  ", end="")
-        print(f"{Color.RESET.value}")
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Background color
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value} WALL BACKGROUND COLOR ", end="")
@@ -110,7 +110,7 @@ class MazeMenu():
         print(f"{Color.BG_MAGENTA.value}{Color.BOLD.value}  <H>  ", end="")
         print(f"{Color.BG_CYAN.value}{Color.BOLD.value}  <J>  ", end="")
         print(f"{Color.BG_WHITE.value}{Color.BOLD.value}  <K>  ", end="")
-        print(f"{Color.RESET.value}")
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Wall type
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}       WALL TYPE       ", end="")
@@ -122,18 +122,18 @@ class MazeMenu():
         print(f" @<6>@ ", end="")
         print(f" ┼<7>┼ ", end="")
         print(f" ╬<8>╬ ", end="")
-        print(f"{Color.RESET.value}")
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Display path
-        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}      DISPLAY PATH      ", end="")
-        print(f"        <N> SHOW PATH        ", end="")
-        print(f"        <M> HIDE PATH        ", end="")
-        print(f"{Color.RESET.value}")
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}     DISPLAY PATH      ", end="")
+        print(f"       <N> SHOW PATH        ", end="")
+        print(f"       <M> HIDE PATH        ", end="")
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Exit
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}", end="")
         print(f"                                  <X> TO EXIT                                  ", end="")
-        print(f"{Color.RESET.value}")
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Error
         self.display_error() if len(self.error_text) else self.hide_error()
@@ -152,9 +152,9 @@ class MazeMenu():
     def display_error(self) -> None:
         print(f"{Color.RED.value}{Color.BLINKING.value}{Color.BOLD.value}", end="")
         print(f"{self.error_text}", end="")
-        print(f"{Color.RESET.value}")
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
         self.error_text = ""
 
     def hide_error(self) -> None:
         print(f"{" " * len(self.error_text)}", end="")
-        print(f"{Color.RESET.value}")
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
