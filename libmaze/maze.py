@@ -2,6 +2,7 @@ from typing import Any, Self
 
 from .maze_config import MazeConfig
 from .maze_path import MazePath
+from .maze_genrerator import MazeGenerator
 from .wall import Wall
 from .coord import Coord
 from .color import Color
@@ -16,12 +17,17 @@ class Maze():
         self.grid: list[list[int]] = [[0]*(self.config.width*3+1) for _ in range(self.config.height*2+1)]
         self.wall: Wall = Wall(self.config.wall_type, self.config.wall_color, self.config.wall_bkcolor)
         self.path: MazePath = MazePath(self.config)
-        self.generate_new()
+        self.generator: MazeGenerator = MazeGenerator(self.config)
+        self.generator.generate()
+        # self.generate_new()
 
     def maze_hexa_to_grid(self) -> None:
-        for line in range(self.config.height):
-            for col in range(len(self.maze_hexa[line])):
-                cell = int(self.maze_hexa[line][col], 16)
+        # for line in range(self.config.height):
+        #     for col in range(len(self.maze_hexa[line])):
+        #         cell = int(self.maze_hexa[line][col], 16)
+        for line in range(len(self.generator.grid)):
+            for col in range(len(self.generator.grid[line])):
+                cell = self.generator.grid[line][col]
                 if cell == 15:
                     self.grid[line*2+1][col*3+1] = -1
                     self.grid[line*2+1][col*3+2] = -1
