@@ -15,7 +15,7 @@ class MazeMenu():
     def menu_choice(self, choice: str) -> bool:
         stay_in_loop: bool = True
         refresh_maze: bool = False
-        is_way_visible: bool = False
+        is_path_visible: bool = False
         match choice:
             case "Q":
                 self.maze.config.wall_color = Color.BLACK
@@ -66,12 +66,12 @@ class MazeMenu():
             case "8":
                 self.maze.config.wall_type = WallType.DOUBLE
             case "N":
-                self.maze.way.visible = True
-                self.maze.way.speed = 10
-                # self.error_text = "<N> SHOW WAY : Feature coming soon"
+                self.maze.path.visible = True
+                self.maze.path.speed = 10
+                # self.error_text = "<N> SHOW PATH : Feature coming soon"
             case "M":
-                self.maze.way.visible = False
-                # self.error_text = "<M> HIDE WAY : Feature coming soon"
+                self.maze.path.visible = False
+                # self.error_text = "<M> HIDE PATH : Feature coming soon"
             case "X":
                 stay_in_loop = False
         # if choice not in ["N", "M", "X"]:
@@ -124,10 +124,10 @@ class MazeMenu():
         print(f" ╬<8>╬ ", end="")
         print(f"{Color.RESET.value}")
 
-        # Display way
-        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}      DISPLAY WAY      ", end="")
-        print(f"        <N> SHOW WAY        ", end="")
-        print(f"        <M> HIDE WAY        ", end="")
+        # Display path
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}      DISPLAY PATH      ", end="")
+        print(f"        <N> SHOW PATH        ", end="")
+        print(f"        <M> HIDE PATH        ", end="")
         print(f"{Color.RESET.value}")
 
         # Exit

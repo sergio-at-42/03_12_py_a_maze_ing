@@ -8,7 +8,7 @@ from .color import Color
 from .wall_type import WallType
 
 
-class MazeWay():
+class MazePath():
 
     def __init__(self, maze_config: MazeConfig) -> None:
         self.maze_config: MazeConfig = maze_config
@@ -17,7 +17,7 @@ class MazeWay():
         self.position: Coord = Coord(x = self.maze_config.entry.x, y = self.maze_config.entry.y)
         self.old_position: Coord = Coord(x = self.position.x, y = self.position.y)
         self.wall: Wall = Wall(WallType.SIMPLE, Color.CYAN, Color.BG_BLACK)
-        self.wall_way: str = ""
+        self.wall_path: str = ""
         self.visible:bool = False
         self.speed: int = 0
         # self.entry_icon: str = "🏁" # U+1F3C1
@@ -36,19 +36,19 @@ class MazeWay():
                 case "N":
                     if self.position.y > 1:
                         self.position.y -= 1
-                        self.wall_way = self.wall.construct(1)
+                        self.wall_path = self.wall.construct(1)
                 case "S":
                     if self.position.y < self.maze_config.height:
                         self.position.y += 1
-                        self.wall_way = self.wall.construct(1)
+                        self.wall_path = self.wall.construct(1)
                 case "E":
                     if self.position.x < self.maze_config.width:
                         self.position.x += 1
-                        self.wall_way = f"{self.wall.construct(2) * 3}"
+                        self.wall_path = f"{self.wall.construct(2) * 3}"
                 case "W":
                     if self.position.x > 1:
                         self.position.x -= 1
-                        self.wall_way = f"{self.wall.construct(2) * 3}"
+                        self.wall_path = f"{self.wall.construct(2) * 3}"
             self.display_position()
         self.speed = 0
 
@@ -60,7 +60,7 @@ class MazeWay():
 
     def display_old_position(self) -> None:
         print(f"\033[{self.old_position.y * 2};{self.old_position.x * 3 - 1}H", end="")
-        print(f"{Color.RED.value}{self.wall_way}{Color.RESET.value}")
+        print(f"{Color.RED.value}{self.wall_path}{Color.RESET.value}")
 
     def display_entry(self) -> None:
         print(f"\033[{self.maze_config.entry.y * 2};{self.maze_config.entry.x * 3 - 1}H", end="")

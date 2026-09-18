@@ -1,7 +1,7 @@
 from typing import Any, Self
 
 from .maze_config import MazeConfig
-from .maze_way import MazeWay
+from .maze_path import MazePath
 from .wall import Wall
 from .coord import Coord
 from .color import Color
@@ -15,7 +15,7 @@ class Maze():
         self.maze_hexa: list[str]
         self.grid: list[list[int]] = [[0]*(self.config.width*3+1) for _ in range(self.config.height*2+1)]
         self.wall: Wall = Wall(self.config.wall_type, self.config.wall_color, self.config.wall_bkcolor)
-        self.way: MazeWay = MazeWay(self.config)
+        self.path: MazePath = MazePath(self.config)
         self.generate_new()
 
     def maze_hexa_to_grid(self) -> None:
@@ -53,10 +53,10 @@ class Maze():
             for col in range(self.config.width*3+1):
                 print(self.construct_wall(line, col), end="")
             print()
-        if self.way.visible:
-            self.way.display()
-        self.way.display_entry()
-        self.way.display_exit()
+        if self.path.visible:
+            self.path.display()
+        self.path.display_entry()
+        self.path.display_exit()
 
     def construct_wall(self, line: int, col: int) -> str:
         if self.grid[line][col] < 0:
@@ -112,7 +112,7 @@ class Maze():
                 for line in self.maze_hexa:
                     output_file.write(f"{line}\n")
                 output_file.write("\n")
-                output_file.write("# Way from Entry to Exit\n")
+                output_file.write("# Path from Entry to Exit\n")
                 output_file.write(f"N N W W W S S S S S S W W W N N N N W S S S S S S S S S E E E S W W W W W W N W S S\n")
                 write_ok = True
         except Exception as e:
