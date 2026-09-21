@@ -1,3 +1,4 @@
+from random import randint
 import sys, termios, tty
 
 from .maze import Maze
@@ -14,8 +15,6 @@ class MazeMenu():
 
     def menu_choice(self, choice: str) -> bool:
         stay_in_loop: bool = True
-        refresh_maze: bool = False
-        is_path_visible: bool = False
         match choice:
             case "Q":
                 self.maze.config.wall_color = Color.BLACK
@@ -68,14 +67,16 @@ class MazeMenu():
             case "N":
                 self.maze.path.visible = True
                 self.maze.path.speed = 10
-                # self.error_text = "<N> SHOW PATH : Feature coming soon"
             case "M":
                 self.maze.path.visible = False
-                # self.error_text = "<M> HIDE PATH : Feature coming soon"
+            case "B":
+                self.maze.generator.seed = randint(0, 32767)
+                self.error_text = f"{self.maze.generator.seed}"
+                self.maze.generator.generate()
+            case "Z":
+                self.maze.write_output_file()
             case "X":
                 stay_in_loop = False
-        # if choice not in ["N", "M", "X"]:
-        #     self.maze.display()
         return (stay_in_loop)
 
     def input_loop(self) -> None:
@@ -146,8 +147,10 @@ class MazeMenu():
 
         # Exit
         self.display_frame_side()
-        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}", end="")
-        print(f"                                  <X> TO EXIT                                  ", end="")
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}     SAVE & EXIT       ", end="")
+        print(f"   <B> NEW MAZE   ", end="")
+        print(f"   <Z> SAVE MAZE   ", end="")
+        print(f"    <X> TO EXIT    ", end="")
         self.display_frame_side()
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 

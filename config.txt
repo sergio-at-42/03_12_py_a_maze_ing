@@ -1,8 +1,8 @@
 # Maze width
-WIDTH=25
+WIDTH=32
 
 # Maze height
-HEIGHT=20
+HEIGHT=28
 
 # Maze entry
 ENTRY=1,1

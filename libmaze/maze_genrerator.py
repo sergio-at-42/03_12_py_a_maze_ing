@@ -26,21 +26,21 @@ PATTERN_H = len(PATTERN_42)     # 5
 #     perfect=config.perfect,
 # )
 class MazeGenerator:
-    # def __init__(self, width: int, height: int,
-    #              entry: tuple[int, int], exit: tuple[int, int], seed: int = 0, perfect: bool = True,) -> None:
-    def __init__(self, maze_config: MazeConfig) -> None:
-        self.maze_config: MazeConfig = maze_config
-        # self.width = width
-        # self.height = height
-        self.entry = (self.maze_config.entry.x, self.maze_config.entry.y)
-        self.exit = (self.maze_config.exit.x, self.maze_config.exit.y)
-        # self.seed = seed
-        # self.perfect = perfect
+    def __init__(self, width: int, height: int,
+                 entry: tuple[int, int], exit: tuple[int, int], seed: int = 0, perfect: bool = True,) -> None:
+    # def __init__(self, maze_config: MazeConfig) -> None:
+    #     self.maze_config: MazeConfig = maze_config
+        self.width = width
+        self.height = height
+        self.entry = entry
+        self.exit = exit
+        self.seed = seed
+        self.perfect = perfect
         # grid representation of the maze, where each cell is represented by a
         # 4-bit integer
         self.grid: list[list[int]] = [
-            [0b1111 for _ in range(self.maze_config.width)]
-            for _ in range(self.maze_config.height)
+            [0b1111 for _ in range(self.width)]
+            for _ in range(self.height)
         ]
         self._solution_path: list[tuple[int, int]] = []
 
@@ -55,7 +55,7 @@ class MazeGenerator:
         result: list[tuple[int, int, int]] = []
         for direction, (dx, dy) in DELTA.items():
             nx, ny = x + dx, y + dy
-            if not (0 <= nx < self.maze_config.width and 0 <= ny < self.maze_config.height):
+            if not (0 <= nx < self.width and 0 <= ny < self.height):
                 continue
             if visited[ny][nx] or (nx, ny) in reserved:
                 continue
@@ -78,15 +78,15 @@ class MazeGenerator:
         with error message displayed)."""
 
         margin = 2  # on garde au moins 2 cellules de marge autour du motif
-        if self.maze_config.width < PATTERN_W + margin or self.maze_config.height < PATTERN_H + margin:
+        if self.width < PATTERN_W + margin or self.height < PATTERN_H + margin:
             print(
                 "Warning: maze too small to display the '42' pattern "
                 f"(needs at least {PATTERN_W + margin}x{PATTERN_H + margin})."
             )
             return set()
 
-        offset_x = (self.maze_config.width - PATTERN_W) // 2
-        offset_y = (self.maze_config.height - PATTERN_H) // 2
+        offset_x = (self.width - PATTERN_W) // 2
+        offset_y = (self.height - PATTERN_H) // 2
 
         reserved: set[tuple[int, int]] = set()
         for row, line in enumerate(PATTERN_42):
@@ -98,7 +98,7 @@ class MazeGenerator:
 
     def dfs(self) -> None:
         """ Depth-first search to generate the maze """
-        visited = [[False] * self.maze_config.width for _ in range(self.maze_config.height)]
+        visited = [[False] * self.width for _ in range(self.height)]
         start = self.entry
         stack: list[tuple[int, int]] = [start]
         visited[start[1]][start[0]] = True
@@ -115,7 +115,7 @@ class MazeGenerator:
             stack.append((nx, ny))
             
     def generate(self) -> None:
-        self.rng = random.Random(self.maze_config.seed)
+        self.rng = random.Random(self.seed)
         self.reserved = self.set_pattern()
         entry_xy = self.entry
         exit_xy = self.exit
