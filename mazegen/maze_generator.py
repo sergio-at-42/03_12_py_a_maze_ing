@@ -595,3 +595,43 @@ class MazeGenerator:
         if not self._solution_path:
             self.solve()
         return self._solution_path
+
+### solve method using bfs (breadth-first search)
+    def solve_bfs(self) -> list[str]:
+        path: list[str] = []
+        path = self.solve_bfs_recursivity(self.entry[0], self.entry[1])
+        # for y in self.grid:
+        #     for cell in y:
+        #         # cell = self.grid[y][x]
+        #         print(y, cell, end = "   ")
+        return (path)
+
+### solve method using bfs (breadth-first search)
+    def solve_bfs_recursivity(self, x: int, y: int, direction: str = "") -> list[str]:
+        cell: int = 0
+        path: list[str] = []
+        if x == self.exit[0] and y == self.exit[1]:
+            return (path.insert(0, direction))
+        cell = self.grid[y-1][x-1]
+        print(x, y, cell)
+        if cell//8:
+            cell -= 8
+        else:
+            x -= 1
+            path = self.solve_bfs_recursivity(x, y, "W")
+        if cell//4:
+            cell -= 4
+        else:
+            y += 1
+            path = self.solve_bfs_recursivity(x, y, "S")
+        if cell//2:
+            cell -= 2
+        else:
+            x += 1
+            path = self.solve_bfs_recursivity(x, y, "E")
+        if cell:
+            cell = 0
+        else:
+            y -= 1
+            path = self.solve_bfs_recursivity(x, y, "N")
+        return (path)
