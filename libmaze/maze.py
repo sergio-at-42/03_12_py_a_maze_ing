@@ -34,40 +34,16 @@ class Maze():
             self.config.perfect)
         self.new_maze()
 
-    def maze_hexa_to_grid(self) -> None:
-        # for line in range(self.config.height):
-        #     for col in range(len(self.maze_hexa[line])):
-        #         cell = int(self.maze_hexa[line][col], 16)
-        for line in range(len(self.generator.grid)):
-            for col in range(len(self.generator.grid[line])):
-                cell = self.generator.grid[line][col]
-                if cell == 15:
-                    self.grid[line*2+1][col*3+1] = -1
-                    self.grid[line*2+1][col*3+2] = -1
-                if cell//8:
-                    cell -= 8
-                    self.grid[line*2][col*3] = 1
-                    self.grid[line*2+1][col*3] = 1
-                    self.grid[line*2+2][col*3] = 1
-                if cell//4:
-                    cell -= 4
-                    self.grid[line*2+2][col*3] = 1
-                    self.grid[line*2+2][col*3+1] = 1
-                    self.grid[line*2+2][col*3+2] = 1
-                if cell//2:
-                    cell -= 2
-                    self.grid[line*2][col*3+3] = 1
-                    self.grid[line*2+1][col*3+3] = 1
-                    self.grid[line*2+2][col*3+3] = 1
-                if cell:
-                    self.grid[line*2][col*3] = 1
-                    self.grid[line*2][col*3+1] = 1
-                    self.grid[line*2][col*3+2] = 1
-
     def new_maze(self) -> None:
         for line in range(self.config.height*2+1):
             for col in range(self.config.width*3+1):
                 self.grid[line][col] = 0
+        self.generator.width = self.config.width
+        self.generator.height = self.config.height
+        self.generator.entry = (self.config.entry.x, self.config.entry.y)
+        self.generator.exit = (self.config.exit.x, self.config.exit.y)
+        self.generator.seed = self.config.seed
+        self.generator.perfect = self.config.perfect
         self.generator.generate()
         # for line in range(self.config.height):
         #     for col in range(len(self.maze_hexa[line])):
@@ -99,17 +75,18 @@ class Maze():
                     self.grid[line*2][col*3+2] = 1
 
     def display(self) -> None:
-        self.new_maze()
+        # self.new_maze()
         self.wall.init_wall(self.config.wall_type, self.config.wall_color, self.config.wall_bkcolor)
         print("\033[H\033[2J", end="")
         for line in range(self.config.height*2+1):
             for col in range(self.config.width*3+1):
                 print(self.construct_wall(line, col), end="")
             print()
-        if self.path.visible:
+        if self.config.perfect and self.path.visible:
+            self.path.direction = self.generator.solve()
             self.path.display()
-        self.path.display_entry()
-        self.path.display_exit()
+            self.path.display_entry()
+            self.path.display_exit()
 
     def construct_wall(self, line: int, col: int) -> str:
         if self.grid[line][col] < 0:
@@ -211,4 +188,34 @@ class Maze():
     #         "86956951692C1455416928552",
     #         "C545545456545555454444556"
     #     ]
+
+    # def maze_hexa_to_grid(self) -> None:
+    #     # for line in range(self.config.height):
+    #     #     for col in range(len(self.maze_hexa[line])):
+    #     #         cell = int(self.maze_hexa[line][col], 16)
+    #     for line in range(len(self.generator.grid)):
+    #         for col in range(len(self.generator.grid[line])):
+    #             cell = self.generator.grid[line][col]
+    #             if cell == 15:
+    #                 self.grid[line*2+1][col*3+1] = -1
+    #                 self.grid[line*2+1][col*3+2] = -1
+    #             if cell//8:
+    #                 cell -= 8
+    #                 self.grid[line*2][col*3] = 1
+    #                 self.grid[line*2+1][col*3] = 1
+    #                 self.grid[line*2+2][col*3] = 1
+    #             if cell//4:
+    #                 cell -= 4
+    #                 self.grid[line*2+2][col*3] = 1
+    #                 self.grid[line*2+2][col*3+1] = 1
+    #                 self.grid[line*2+2][col*3+2] = 1
+    #             if cell//2:
+    #                 cell -= 2
+    #                 self.grid[line*2][col*3+3] = 1
+    #                 self.grid[line*2+1][col*3+3] = 1
+    #                 self.grid[line*2+2][col*3+3] = 1
+    #             if cell:
+    #                 self.grid[line*2][col*3] = 1
+    #                 self.grid[line*2][col*3+1] = 1
+    #                 self.grid[line*2][col*3+2] = 1
 

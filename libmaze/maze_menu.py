@@ -66,12 +66,15 @@ class MazeMenu():
                 self.maze.config.wall_type = WallType.DOUBLE
             case "N":
                 self.maze.path.visible = True
-                self.maze.path.speed = 10
+                self.maze.path.speed = 5
             case "M":
                 self.maze.path.visible = False
-            case "B":
-                self.maze.generator.seed = randint(0, 32767)
+            case "V":
+                self.maze.config.seed = randint(0, 32767)
+                self.maze.path.speed = 5
                 self.maze.new_maze()
+            case "B":
+                self.maze.config.perfect = not(self.maze.config.perfect)
             case "Z":
                 self.maze.write_output_file()
             case "X":
@@ -144,12 +147,19 @@ class MazeMenu():
         self.display_frame_side()
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
+        # Maze type
+        self.display_frame_side()
+        print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}       MAZE TYPE       ", end="")
+        print(f"       <V> NEW MAZE         ", end="")
+        print(f"       <B> PERFECT {"\U0001F44D" if self.maze.config.perfect else "\U0001F44E"}       ", end="")
+        self.display_frame_side()
+        print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
+
         # Exit
         self.display_frame_side()
         print(f"{self.maze.config.wall_color.value}{self.maze.config.wall_bkcolor.value}{Color.BOLD.value}     SAVE & EXIT       ", end="")
-        print(f"   <B> NEW MAZE   ", end="")
-        print(f"   <Z> SAVE MAZE   ", end="")
-        print(f"    <X> TO EXIT    ", end="")
+        print(f"       <Z> SAVE MAZE        ", end="")
+        print(f"        <X> TO EXIT         ", end="")
         self.display_frame_side()
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 

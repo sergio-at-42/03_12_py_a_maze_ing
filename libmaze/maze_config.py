@@ -77,7 +77,7 @@ class MazeConfig(BaseModel):
             case "OUTPUT_FILE":
                 self.output_file = value.strip()
             case "PERFECT":
-                self.perfect = bool(value)
+                self.perfect = False if value.upper() == "FALSE" else bool(value)
             case "SEED":
                 self.seed = int(value)
             case _:
