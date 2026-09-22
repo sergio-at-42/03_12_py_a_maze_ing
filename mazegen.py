@@ -1,7 +1,63 @@
 import random
+from collections import deque
+"""mazegen — reusable maze generation and solving library.
+
+Generates a maze on a rectangular grid using a depth-first search
+(recursive backtracker). Two modes are available:
+
+- perfect=True  : a spanning tree — exactly one path between any two cells,
+  no loops.
+- perfect=False (default): a "Pac-Man"-style playable board — fully
+  connected, corners and centre open, at least two independent loops,
+  very few (or no) dead-ends, and no corridor wider than 2 cells.
+
+Basic usage
+-----------
+    from mazegen import MazeGenerator
+
+    generator = MazeGenerator(
+        width=20,
+        height=15,
+        entry=(0, 0),
+        exit=(19, 14),
+        seed=42,       # optional, defaults to 0 — reproducible generation
+        perfect=False, # optional, defaults to True
+    )
+    generator.generate()
+
+Accessing the generated structure
+----------------------------------
+Each cell is stored as a 4-bit integer in generator.grid[y][x], where a
+set bit means the wall on that side is CLOSED:
+    bit 0 (1) = North   bit 1 (2) = East
+    bit 2 (4) = South   bit 3 (8) = West
+
+    is_closed = generator.is_wall(x, y, direction)
+    is_open   = generator.is_open(x, y, direction)
+
+To get the whole maze as hexadecimal rows (one digit per cell, matching
+the subject's output format):
+    rows = generator.to_hexa_rows()
+
+Accessing a solution
+---------------------
+    path = generator.solve()          # list of "N"/"E"/"S"/"W" letters
+    # or, to reuse the last computed solution without recomputing:
+    path = generator.solution_path
+
+Custom parameters
+------------------
+- width, height : int, grid dimensions (in cells)
+- entry, exit   : tuple[int, int], (x, y) coordinates
+- seed          : int, controls reproducibility — same seed + same
+                  parameters always produce the same maze
+- perfect       : bool, see the two modes above
+"""
+
 N, E, S, W = 1, 2, 4, 8
 OPPOSITE = {N: S, S: N, E: W, W: E}
 DELTA = {N: (0, -1), E: (1, 0), S: (0, 1), W: (-1, 0)}
+DIRECTION_LETTER = {N: "N", E: "E", S: "S", W: "W"}
 PATTERN_42 = [
     "X..X.XXXX",
     "X..X....X",
@@ -12,15 +68,7 @@ PATTERN_42 = [
 PATTERN_W = len(PATTERN_42[0])   # 9
 PATTERN_H = len(PATTERN_42)     # 5
 
-# dans maze ou dans main il faut mettre
-# generator = MazeGenerator(
-#     width=config.width,
-#     height=config.height,
-#     entry=(config.entry.x, config.entry.y),
-#     exit=(config.exit.x, config.exit.y),
-#     seed=config.seed,
-#     perfect=config.perfect,
-# )
+
 class MazeGenerator:
     def __init__(self, width: int, height: int,
                  entry: tuple[int, int], exit: tuple[int, int], seed: int = 0, perfect: bool = True,) -> None:
@@ -480,7 +528,7 @@ class MazeGenerator:
         self.open_center()
         self.make_non_perfect()
     
-    ### validation and generation entry points
+### validation and generation entry points
 
     def validate(self) -> None:
         if not (0 <= self.entry[0] < self.width and 0 <= self.entry[1] < self.height):
@@ -502,3 +550,48 @@ class MazeGenerator:
             self.dfs()
         else:
             self.generate_non_perfect()
+
+
+### solve method using bfs
+    def solve(self) -> None:
+        """ Solve the maze using breadth-first search."""
+        start = self.entry
+        end = self.exit
+        visited = {start}
+        parent: dict[tuple[int, int], tuple[tuple[int, int], int]] = {}
+        queue = deque([start])
+
+        while queue:
+            current = queue.popleft()
+            if current == end:
+                break
+            x, y = current
+            for direction in (N, E, S, W):
+                if not self.is_open(x, y, direction):
+                    continue
+                dx, dy = DELTA[direction]
+                neighbor = (x + dx, y + dy)
+                if neighbor in visited:
+                    continue
+                visited.add(neighbor)
+                parent[neighbor] = (current, direction)
+                queue.append(neighbor)
+        else:
+            raise ValueError("No path found between entry and exit.")
+
+        path: list[str] = []
+        cell = end
+        while cell != start:
+            prev, direction = parent[cell]
+            path.append(DIRECTION_LETTER[direction])
+            cell = prev
+        path.reverse()
+        self._solution_path = path
+        return path
+        
+    @property
+    def solution_path(self) -> list[str]:
+        """Access the solution path. If it has not been computed yet, compute it."""
+        if not self._solution_path:
+            self.solve()
+        return self._solution_path
