@@ -1,7 +1,5 @@
 import random
 
-from .maze_config import MazeConfig
-
 
 N, E, S, W = 1, 2, 4, 8
 OPPOSITE = {N: S, S: N, E: W, W: E}

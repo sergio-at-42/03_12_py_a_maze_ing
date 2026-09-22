@@ -71,8 +71,7 @@ class MazeMenu():
                 self.maze.path.visible = False
             case "B":
                 self.maze.generator.seed = randint(0, 32767)
-                self.error_text = f"{self.maze.generator.seed}"
-                self.maze.generator.generate()
+                self.maze.new_maze()
             case "Z":
                 self.maze.write_output_file()
             case "X":

@@ -2,7 +2,7 @@ from typing import Any, Self
 
 from .maze_config import MazeConfig
 from .maze_path import MazePath
-from .maze_genrerator import MazeGenerator
+from mazegen import MazeGenerator
 from .wall import Wall
 from .coord import Coord
 from .color import Color
@@ -32,8 +32,7 @@ class Maze():
             (self.config.exit.x, self.config.exit.y),
             self.config.seed,
             self.config.perfect)
-        self.generator.generate()
-        # self.generate_new()
+        self.new_maze()
 
     def maze_hexa_to_grid(self) -> None:
         # for line in range(self.config.height):
@@ -65,8 +64,42 @@ class Maze():
                     self.grid[line*2][col*3+1] = 1
                     self.grid[line*2][col*3+2] = 1
 
+    def new_maze(self) -> None:
+        for line in range(self.config.height*2+1):
+            for col in range(self.config.width*3+1):
+                self.grid[line][col] = 0
+        self.generator.generate()
+        # for line in range(self.config.height):
+        #     for col in range(len(self.maze_hexa[line])):
+        #         cell = int(self.maze_hexa[line][col], 16)
+        for line in range(len(self.generator.grid)):
+            for col in range(len(self.generator.grid[line])):
+                cell = self.generator.grid[line][col]
+                if cell == 15:
+                    self.grid[line*2+1][col*3+1] = -1
+                    self.grid[line*2+1][col*3+2] = -1
+                if cell//8:
+                    cell -= 8
+                    self.grid[line*2][col*3] = 1
+                    self.grid[line*2+1][col*3] = 1
+                    self.grid[line*2+2][col*3] = 1
+                if cell//4:
+                    cell -= 4
+                    self.grid[line*2+2][col*3] = 1
+                    self.grid[line*2+2][col*3+1] = 1
+                    self.grid[line*2+2][col*3+2] = 1
+                if cell//2:
+                    cell -= 2
+                    self.grid[line*2][col*3+3] = 1
+                    self.grid[line*2+1][col*3+3] = 1
+                    self.grid[line*2+2][col*3+3] = 1
+                if cell:
+                    self.grid[line*2][col*3] = 1
+                    self.grid[line*2][col*3+1] = 1
+                    self.grid[line*2][col*3+2] = 1
+
     def display(self) -> None:
-        self.maze_hexa_to_grid()
+        self.new_maze()
         self.wall.init_wall(self.config.wall_type, self.config.wall_color, self.config.wall_bkcolor)
         print("\033[H\033[2J", end="")
         for line in range(self.config.height*2+1):
@@ -120,7 +153,7 @@ class Maze():
                 output_file.write(f"{self.config.exit.x},{self.config.exit.y}\n")
                 output_file.write("\n")
                 output_file.write("# Path from Entry to Exit\n")
-                output_file.write(f"N N W W W S S S S S S W W W N N N N W S S S S S S S S S E E E S W W W W W W N W S S\n")
+                output_file.write(f"{self.path.direction}\n")
                 write_ok = True
         except Exception as e:
             print(f"{e}")

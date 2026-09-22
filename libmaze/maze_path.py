@@ -17,11 +17,8 @@ class MazePath():
         self.position: Coord = Coord(x = self.maze_config.entry.x, y = self.maze_config.entry.y)
         self.old_position: Coord = Coord(x = self.position.x, y = self.position.y)
         self.wall: Wall = Wall(WallType.SIMPLE, Color.CYAN, Color.BG_BLACK)
-        self.wall_path: str = ""
         self.visible:bool = False
         self.speed: int = 0
-        # self.entry_icon: str = "🏁" # U+1F3C1
-        # self.exit_icon: str = "🍾" # U+1F37E
         self.direction: str = "EEEEESSSSSSEEEEEEEEEEEEEEESSSSSSSSSSSWWWNNNNWWWWWWWWWWSSSSSSSSSEEESWWWEENNNNNNNWSSWWWWWWWWWSSSSEEEEEEEEEEEEEEEEEEEEEEEES"
 
     def display(self) -> None:
@@ -38,23 +35,18 @@ class MazePath():
                     if self.position.y > 1:
                         self.position.y -= 1
                         self.display_north()
-                        # self.wall_path = self.wall.construct(1)
                 case "S":
                     if self.position.y < self.maze_config.height:
                         self.position.y += 1
                         self.display_south()
-                        # self.wall_path = self.wall.construct(1)
                 case "E":
                     if self.position.x < self.maze_config.width:
                         self.position.x += 1
                         self.display_east()
-                        # self.wall_path = f"{self.wall.construct(2) * 3}"
                 case "W":
                     if self.position.x > 1:
                         self.position.x -= 1
                         self.display_west()
-                        # self.wall_path = f"{self.wall.construct(2) * 3}"
-            # self.display_position()
         self.speed = 0
 
     def display_east(self) -> None:
