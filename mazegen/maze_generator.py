@@ -80,11 +80,12 @@ class MazeGenerator:
         self.perfect = perfect
         # grid representation of the maze, where each cell is represented by a
         # 4-bit integer
-        self.grid: list[list[int]] = [
-            [0b1111 for _ in range(self.width)]
-            for _ in range(self.height)
-        ]
+        self.grid: list[list[int]] = []
+        self.init_grid()
         self._solution_path: list[tuple[int, int]] = []
+
+    def init_grid(self) -> None:
+        self.grid = [[0b1111 for _ in range(self.width)] for _ in range(self.height)]
 
 ### depth-first search maze generation
 
@@ -543,6 +544,7 @@ class MazeGenerator:
             raise ValueError("Exit is inside the 42 pattern.")
 
     def generate(self) -> None:
+        self.init_grid()
         self.rng = random.Random(self.seed)
         self.reserved = self.set_pattern()
         self.validate()
@@ -596,6 +598,9 @@ class MazeGenerator:
             self.solve()
         return self._solution_path
 
+
+### METHODE NON UTILISE
+### Doublon de solve. J'ai eu besoin de la réécrire à ma manière pour m'approprier la logique ;-)
 ### solve method using bfs
     def solve_dfs(self) -> None:
         """ Solve the maze using breadth-first search."""
