@@ -130,7 +130,8 @@ class Maze():
                 output_file.write(f"{self.config.exit.x},{self.config.exit.y}\n")
                 output_file.write("\n")
                 output_file.write("# Path from Entry to Exit\n")
-                output_file.write(f"{self.path.direction}\n")
+                output_line = "".join(direction for direction in self.path.direction)
+                output_file.write(f"{output_line}\n")
                 write_ok = True
         except Exception as e:
             print(f"{e}")
