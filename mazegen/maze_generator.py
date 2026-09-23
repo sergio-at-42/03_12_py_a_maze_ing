@@ -71,7 +71,8 @@ PATTERN_H = len(PATTERN_42)     # 5
 
 class MazeGenerator:
     def __init__(self, width: int, height: int,
-                 entry: tuple[int, int], exit: tuple[int, int], seed: int = 0, perfect: bool = True,) -> None:
+                 entry: tuple[int, int], exit: tuple[int, int],
+                 seed: int = 0, perfect: bool = True,) -> None:
         self.width = width
         self.height = height
         self.entry = entry
@@ -86,9 +87,10 @@ class MazeGenerator:
         # self._solution_path: list[tuple[int, int]] = []
 
     def init_grid(self) -> None:
-        self.grid = [[0b1111 for _ in range(self.width)] for _ in range(self.height)]
+        self.grid = [[0b1111 for _ in range(self.width)]
+                     for _ in range(self.height)]
 
-### depth-first search maze generation
+# depth-first search maze generation
 
     def check_neighbors(
         self, x: int, y: int, visited: list[list[bool]],
@@ -107,7 +109,6 @@ class MazeGenerator:
             result.append((direction, nx, ny))
         return result
 
-
     def brick_walls(self, x: int, y: int,
                     direction: int, nx: int, ny: int) -> None:
         """brick the wall between (x, y) and its neighbor (nx, ny)
@@ -115,7 +116,7 @@ class MazeGenerator:
 
         self.grid[y][x] &= ~direction
         self.grid[ny][nx] &= ~OPPOSITE[direction]
-    
+
     def restore_wall(self, x: int, y: int,
                      direction: int, nx: int, ny: int) -> None:
         """ Put the wall back between two neighboring cells."""
@@ -129,7 +130,6 @@ class MazeGenerator:
     def is_open(self, x: int, y: int, direction: int) -> bool:
         """Return True if there is no wall in this direction."""
         return (self.grid[y][x] & direction) == 0
-
 
     def set_pattern(self) -> set[tuple[int, int]]:
         """Set the coordinates of the '42' pattern.
@@ -155,7 +155,6 @@ class MazeGenerator:
                     reserved.add((offset_x + col, offset_y + row))
         return reserved
 
-
     def dfs(self) -> None:
         """ Depth-first search to generate the maze
          The resulting maze is a spanning tree:
@@ -179,7 +178,7 @@ class MazeGenerator:
             visited[ny][nx] = True
             stack.append((nx, ny))
 
-### Methods for maze analysis and modification
+# Methods for maze analysis and modification
 
     def degree(self, x: int, y: int) -> int:
         """ Return the number of open connections of a cell.
@@ -250,10 +249,10 @@ class MazeGenerator:
         if vertices == 0:
             return 0
         return edges - vertices + 1
-    
+
     def is_open_3x3area(self, start_x: int, start_y: int) -> bool:
-        """Return True if the 3x3 area starting at (start_x, start_y) is completely open.
-        A 2x3 or 3x2 area is allowed."""
+        """Return True if the 3x3 area starting at (start_x, start_y) is
+        completely open. A 2x3 or 3x2 area is allowed."""
         # The 3x3 block must fit inside the maze.
         if start_x < 0 or start_y < 0:
             return False
@@ -300,9 +299,9 @@ class MazeGenerator:
                     if self.is_open_3x3area(start_x, start_y):
                         return True
         return False
-    
 
-    def can_open_wall(self, x: int, y: int, direction: int, nx: int, ny: int) -> bool:
+    def can_open_wall(self, x: int, y: int,
+                      direction: int, nx: int, ny: int) -> bool:
         """ Try to open a wall.
         The wall is actually opened if the operation is valid.
         Returns:
@@ -343,12 +342,13 @@ class MazeGenerator:
         # Check whether this created a forbidden 3x3.
         if self.creates_open_3x3area(x, y, nx, ny):
             # Undo.
-            self.restore_wall(x, y, direction, nx,ny)
+            self.restore_wall(x, y, direction, nx, ny)
             return False
         # Keep the wall open.
         return True
-    
-    def get_closed_internal_walls(self) -> list[tuple[int, int, int, int, int]]:
+
+    def get_closed_internal_walls(self) -> list[
+            tuple[int, int, int, int, int]]:
         """ Return all currently closed internal walls.
         Each item is: (x, y, direction, nx, ny)
         We only consider East and South so that each wall appears once."""
@@ -364,7 +364,7 @@ class MazeGenerator:
                     ny = y
                     if (nx, ny) not in self.reserved:
                         if self.is_wall(x, y, E):
-                            walls.append((x, y, E, nx, ny) )
+                            walls.append((x, y, E, nx, ny))
 
                 if y + 1 < self.height:
                     nx = x
@@ -374,22 +374,23 @@ class MazeGenerator:
 
                         if self.is_wall(x, y, S):
 
-                            walls.append((x, y, S, nx, ny) )
+                            walls.append((x, y, S, nx, ny))
 
         return walls
-    
+
     def corner_positions(self) -> list[tuple[int, int]]:
         """Return the four corners."""
         return [(0, 0),
-            (self.width - 1, 0),
-            (0, self.height - 1),
-            (self.width - 1, self.height - 1)
-            ]
+                (self.width - 1, 0),
+                (0, self.height - 1),
+                (self.width - 1, self.height - 1)
+                ]
 
-    def get_closed_neighbors(self, x: int, y: int) -> list[tuple[int, int, int]]:
+    def get_closed_neighbors(self, x: int, y: int) -> list[
+            tuple[int, int, int]]:
         """ Return closed internal walls around a cell.
         Each result is: (direction, nx, ny)"""
-        
+
         result: list[tuple[int, int, int]] = []
 
         for direction, (dx, dy) in DELTA.items():
@@ -413,11 +414,11 @@ class MazeGenerator:
                     (direction, nx, ny))
         return result
 
-### Mode pac-man: open corners, open center, reduce dead ends, add loops
+# Mode pac-man: open corners, open center, reduce dead ends, add loops
 
     def open_corners(self) -> None:
         """ Make the four corners proper open corridors.
-        A corner has only two possible internal neighbors, 
+        A corner has only two possible internal neighbors,
         therefore degree 2 is the ideal state."""
 
         for x, y in self.corner_positions():
@@ -430,7 +431,7 @@ class MazeGenerator:
                 if self.degree(x, y) >= 2:
                     break
 
-                self.can_open_wall( x, y, direction, nx, ny)
+                self.can_open_wall(x, y, direction, nx, ny)
 
     def center(self) -> tuple[int, int]:
         """Return the center cell.
@@ -438,14 +439,14 @@ class MazeGenerator:
 
         return (self.width // 2, self.height // 2)
 
-
     def open_center(self) -> None:
-        """Ensure the center is an actual corridor. We require at least two connections."""
+        """Ensure the center is an actual corridor.
+        We require at least two connections."""
 
         cx, cy = self.center()
         if (cx, cy) in self.reserved:
             return
-        
+
     def dead_end_cells(self) -> list[tuple[int, int]]:
         """Return all current dead-end cells."""
         result: list[tuple[int, int]] = []
@@ -470,7 +471,8 @@ class MazeGenerator:
         # Prevent infinite loops.
         max_iterations = (self.width * self.height * 4)
         iterations = 0
-        while (self.count_dead_ends() > max_dead_ends and iterations < max_iterations):
+        while (self.count_dead_ends() > max_dead_ends
+               and iterations < max_iterations):
             iterations += 1
             dead_ends = self.dead_end_cells()
             if not dead_ends:
@@ -479,7 +481,7 @@ class MazeGenerator:
 
             opened = False
             for x, y in dead_ends:
-                neighbors = self.get_closed_neighbors(x,y)
+                neighbors = self.get_closed_neighbors(x, y)
                 self.rng.shuffle(neighbors)
 
                 for direction, nx, ny in neighbors:
@@ -491,11 +493,10 @@ class MazeGenerator:
             if not opened:
                 break
 
-
-    def add_loops( self, minimum_loops: int = 2) -> None:
+    def add_loops(self, minimum_loops: int = 2) -> None:
         """Add additional connections until the maze contains at least
         `minimum_loops` independent loops.
-        This is done by randomly opening walls, 
+        This is done by randomly opening walls,
         while ensuring that no 3x3 area becomes completely open.
         """
         if self.count_loops() >= minimum_loops:
@@ -507,12 +508,11 @@ class MazeGenerator:
         for x, y, direction, nx, ny in walls:
             if self.count_loops() >= minimum_loops:
                 return
-            self.can_open_wall( x, y, direction, nx, ny)
+            self.can_open_wall(x, y, direction, nx, ny)
         if self.count_loops() < minimum_loops:
             raise ValueError(f"Could not create {minimum_loops} loops "
-            f"without creating a forbidden 3x3 open area."
-            )
-        
+                             f"without creating a forbidden 3x3 open area.")
+
     def make_non_perfect(self) -> None:
         target_loops = 2
         target_dead_ends = 2
@@ -529,13 +529,15 @@ class MazeGenerator:
         self.open_corners()
         self.open_center()
         self.make_non_perfect()
-    
-### validation and generation entry points
+
+# validation and generation entry points
 
     def validate(self) -> None:
-        if not (0 <= self.entry[0] < self.width and 0 <= self.entry[1] < self.height):
+        if not (0 <= self.entry[0] < self.width
+                and 0 <= self.entry[1] < self.height):
             raise ValueError("Entry is outside the maze.")
-        if not (0 <= self.exit[0] < self.width and 0 <= self.exit[1] < self.height):
+        if not (0 <= self.exit[0] < self.width
+                and 0 <= self.exit[1] < self.height):
             raise ValueError("Exit is outside the maze.")
         if self.entry == self.exit:
             raise ValueError("Entry and exit must be different.")
@@ -554,8 +556,7 @@ class MazeGenerator:
         else:
             self.generate_non_perfect()
 
-
-### solve method using bfs
+# solve method using bfs
     def solve(self) -> list[str]:
         """ Solve the maze using breadth-first search."""
         start = self.entry
@@ -591,10 +592,11 @@ class MazeGenerator:
         path.reverse()
         self._solution_path = path
         return path
-        
+
     @property
     def solution_path(self) -> list[str]:
-        """Access the solution path. If it has not been computed yet, compute it."""
+        """Access the solution path.
+        If it has not been computed yet, compute it."""
         if not self._solution_path:
             self.solve()
         return self._solution_path
