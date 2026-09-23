@@ -20,7 +20,7 @@ class WallType(Enum):
 
     # @
     AT = "@"
-    
+
     # ┌─┬┐ ─
     # ├─┼┤ │
     # └─┴┘
@@ -30,7 +30,6 @@ class WallType(Enum):
     # ╠═╬╣ ║
     # ╚═╩╝
     DOUBLE = "double"
-
 
     # ░ ▒ ▓ █
 
