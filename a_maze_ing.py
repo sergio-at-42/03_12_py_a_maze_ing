@@ -20,7 +20,7 @@ def main() -> None:
 
     my_maze.write_output_file()
 
-    print(f"\033[{my_maze.config.height*2+7};1H", end="")
+    print(f"\033[{my_maze.config.height*2+10};1H", end="")
     print(Color.RESET.value)
 
 if __name__ == "__main__":
