@@ -17,7 +17,7 @@ class MazePath():
         self.wall: Wall = Wall(WallType.SIMPLE, Color.CYAN, Color.BG_BLACK)
         self.visible: bool = False
         self.speed: int = 0
-        self.direction: str = ""
+        self.direction: list[str] = []
 
     def display(self) -> None:
         self.display_entry()

@@ -59,6 +59,7 @@ class MazeConfig(BaseModel):
             print("Default values used to create the maze.")
 
     def set_value_to_attr(self, key: str, value: Any) -> bool:
+        coord: list[str] = []
         value_ok = True
         key = key.upper()
         match key:
@@ -67,11 +68,11 @@ class MazeConfig(BaseModel):
             case "HEIGHT":
                 self.height = int(value)
             case "ENTRY":
-                coord: list[str] = value.partition(",")
+                coord = value.partition(",")
                 self.entry.x = int(coord[0])
                 self.entry.y = int(coord[2])
             case "EXIT":
-                coord: list[str] = value.partition(",")
+                coord = value.partition(",")
                 self.exit.x = int(coord[0])
                 self.exit.y = int(coord[2])
             case "OUTPUT_FILE":

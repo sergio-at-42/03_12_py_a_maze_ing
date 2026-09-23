@@ -82,7 +82,8 @@ class MazeGenerator:
         # 4-bit integer
         self.grid: list[list[int]] = []
         self.init_grid()
-        self._solution_path: list[tuple[int, int]] = []
+        self._solution_path: list[str] = []
+        # self._solution_path: list[tuple[int, int]] = []
 
     def init_grid(self) -> None:
         self.grid = [[0b1111 for _ in range(self.width)] for _ in range(self.height)]
@@ -555,7 +556,7 @@ class MazeGenerator:
 
 
 ### solve method using bfs
-    def solve(self) -> None:
+    def solve(self) -> list[str]:
         """ Solve the maze using breadth-first search."""
         start = self.entry
         end = self.exit
