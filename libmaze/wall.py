@@ -1,14 +1,11 @@
-from typing import Any, Self
-
 from .color import Color
 from .wall_type import WallType
-from .coord import Coord
 
 
 class Wall():
 
     def __init__(self, type: WallType, color: Color, bkcolor: Color):
-        self.type: WallType = WallType.SIMPLE    # SIMPLE DOUBLE UNIQ01 UNIQ02 UNIQ03 UNIQ04 HASHTAG AT
+        self.type: WallType = WallType.SIMPLE
         self.color: Color = Color.YELLOW
         self.bkcolor: Color = Color.BG_BLUE
         self.element: list[str] = [" "] * 17
@@ -61,15 +58,22 @@ class Wall():
             case _:
                 self.element[0] = self.type.value
 
-        self.element[16] = "\U0001F6BB"   # \U0001FAA9   \U00002622   \U0001F6BB
+        self.element[16] = "\U0001F6BB"   # \U0001FAA9 \U00002622 \U0001F6BB
 
     def construct(self, element: int) -> str:
-        block = False
+        wall_element: str = ""
+        block: bool = False
         if element == 16:
             block = True
         elif self.type != WallType.SIMPLE and self.type != WallType.DOUBLE:
             element = 0
-        wall_element = f"{self.color.value}{self.bkcolor.value}{Color.INVERSION.value if block else ""}{Color.BLINKING.value if block else ""}{self.element[element]}{Color.RESET.value}{Color.CURSOR_OFF.value}"
+        wall_element = self.color.value \
+            + self.bkcolor.value \
+            + (Color.INVERSION.value if block else "") \
+            + (Color.BLINKING.value if block else "") \
+            + self.element[element] \
+            + Color.RESET.value \
+            + Color.CURSOR_OFF.value
         return (wall_element)
 
 # ╔═╦╗ ┌─┬┐ ═ ─
