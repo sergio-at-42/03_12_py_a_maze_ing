@@ -596,42 +596,39 @@ class MazeGenerator:
             self.solve()
         return self._solution_path
 
-### solve method using bfs (breadth-first search)
-    def solve_bfs(self) -> list[str]:
-        path: list[str] = []
-        path = self.solve_bfs_recursivity(self.entry[0], self.entry[1])
-        # for y in self.grid:
-        #     for cell in y:
-        #         # cell = self.grid[y][x]
-        #         print(y, cell, end = "   ")
-        return (path)
+### solve method using bfs
+    def solve_dfs(self) -> None:
+        """ Solve the maze using breadth-first search."""
+        start = self.entry
+        end = self.exit
+        visited = {start}
+        parent: dict[tuple[int, int], tuple[tuple[int, int], int]] = {}
+        queue: list[tuple[int, int]] = [start]
+        current = start
 
-### solve method using bfs (breadth-first search)
-    def solve_bfs_recursivity(self, x: int, y: int, direction: str = "") -> list[str]:
-        cell: int = 0
+        while queue and current != end:
+            current = queue.pop()
+            if current != end:
+                x, y = current
+                for direction in (N, E, S, W):
+                    if self.is_open(x, y, direction):
+                        dx, dy = DELTA[direction]
+                        neighbor = (x + dx, y + dy)
+                        if neighbor not in visited:
+                            visited.add(neighbor)
+                            parent[neighbor] = (current, direction)
+                            queue.append(current)
+                            queue.append(neighbor)
+        # else:
+        #     raise ValueError("No path found between entry and exit.")
+
         path: list[str] = []
-        if x == self.exit[0] and y == self.exit[1]:
-            return (path.insert(0, direction))
-        cell = self.grid[y-1][x-1]
-        print(x, y, cell)
-        if cell//8:
-            cell -= 8
-        else:
-            x -= 1
-            path = self.solve_bfs_recursivity(x, y, "W")
-        if cell//4:
-            cell -= 4
-        else:
-            y += 1
-            path = self.solve_bfs_recursivity(x, y, "S")
-        if cell//2:
-            cell -= 2
-        else:
-            x += 1
-            path = self.solve_bfs_recursivity(x, y, "E")
-        if cell:
-            cell = 0
-        else:
-            y -= 1
-            path = self.solve_bfs_recursivity(x, y, "N")
-        return (path)
+        cell = end
+        while cell != start:
+            prev, direction = parent[cell]
+            path.append(DIRECTION_LETTER[direction])
+            cell = prev
+        path.reverse()
+        self._solution_path = path
+        return path
+    

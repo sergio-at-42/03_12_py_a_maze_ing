@@ -12,8 +12,6 @@ class MazePath():
 
     def __init__(self, maze_config: MazeConfig) -> None:
         self.maze_config: MazeConfig = maze_config
-        # self.entry: Coord = maze_config.entry
-        # self.exit:  Coord = maze_config.exit
         self.position: Coord = Coord(x = self.maze_config.entry.x, y = self.maze_config.entry.y)
         self.old_position: Coord = Coord(x = self.position.x, y = self.position.y)
         self.wall: Wall = Wall(WallType.SIMPLE, Color.CYAN, Color.BG_BLACK)
@@ -24,8 +22,8 @@ class MazePath():
     def display(self) -> None:
         self.display_entry()
         self.display_exit()
-        self.position.x = self.maze_config.entry.x
-        self.position.y = self.maze_config.entry.y
+        self.position.x = self.maze_config.entry.x + 1
+        self.position.y = self.maze_config.entry.y + 1
         for d in self.direction:
             self.old_position.x = self.position.x
             self.old_position.y = self.position.y
@@ -82,11 +80,11 @@ class MazePath():
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
     def display_entry(self) -> None:
-        print(f"\033[{self.maze_config.entry.y * 2};{self.maze_config.entry.x * 3 - 1}H", end="")
+        print(f"\033[{(self.maze_config.entry.y+1) * 2};{(self.maze_config.entry.x+1) * 3 - 1}H", end="")
         print(f"{Color.RED.value}{Color.BOLD.value}{self.maze_config.entry_icon}{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
     def display_exit(self) -> None:
-        print(f"\033[{self.maze_config.exit.y * 2};{self.maze_config.exit.x * 3 - 1}H", end="")
+        print(f"\033[{(self.maze_config.exit.y+1) * 2};{(self.maze_config.exit.x+1) * 3 - 1}H", end="")
         print(f"{Color.MAGENTA.value}{Color.BOLD.value}{self.maze_config.exit_icon}{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
 
