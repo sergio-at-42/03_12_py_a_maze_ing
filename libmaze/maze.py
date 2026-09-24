@@ -71,8 +71,8 @@ class Maze():
             for col in range(self.config.width*3+1):
                 print(self.construct_wall(line, col), end="")
             print()
-        if self.config.perfect and self.path.visible:
-            self.path.direction = self.generator._solution_path
+        if self.path.visible:
+            self.path.direction = self.generator.solution_path
             self.path.display()
             self.path.display_entry()
             self.path.display_exit()

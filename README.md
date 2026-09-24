@@ -29,6 +29,7 @@ make lint      # flake8 + mypy
 
 Or directly:
 ```bash
+## ajouetr commande pour activate venv 
 python3 a_maze_ing.py config.txt
 ```
 
@@ -79,7 +80,7 @@ generator = MazeGenerator(width=20, height=15, entry=(0, 0), exit=(19, 14),
                            seed=42, perfect=False)
 generator.generate()
 
-rows = generator.to_hexa_rows()     # hexadecimal grid rows
+##!!rows = generator.to_hexa_rows()     # hexadecimal grid rows
 path = generator.solution_path      # shortest path, as N/E/S/W letters
 ```
 
@@ -94,8 +95,8 @@ depends on this module — not the other way around.
 
 ## Team and project management
 
-- **[sansaidi]**: [role — e.g. maze generation, solving algorithm, tests]
-- **[sbeldjao]**: [role — e.g. config parsing, terminal display, Makefile]
+- **[sansaidi]**: role maze generation, solving algorithm, tests
+- **[sbeldjao]**: config parsing, terminal display, Makefile
 
 [Planning: comment vous aviez prévu de vous répartir le travail au départ,
 et comment ça a évolué — ex: "on avait prévu de finir le générateur en 3
