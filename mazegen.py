@@ -85,6 +85,11 @@ class MazeGenerator:
             for _ in range(self.height)
         ]
         self._solution_path: list[tuple[int, int]] = []
+    
+
+    def init_grid(self) -> None:
+        self.grid = [[0b1111 for _ in range(self.width)]
+                     for _ in range(self.height)]
 
 ### depth-first search maze generation
 
@@ -543,9 +548,12 @@ class MazeGenerator:
             raise ValueError("Exit is inside the 42 pattern.")
 
     def generate(self) -> None:
+        """Generate the maze."""
+        self.init_grid()
         self.rng = random.Random(self.seed)
         self.reserved = self.set_pattern()
         self.validate()
+        self._solution_path = [] 
         if self.perfect:
             self.dfs()
         else:
