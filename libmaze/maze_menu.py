@@ -178,6 +178,7 @@ class MazeMenu():
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Error
+        self.error_text = self.maze.config.msg_error
         self.display_error() if len(self.error_text) else self.hide_error()
 
     def display_frame_side(self) -> None:

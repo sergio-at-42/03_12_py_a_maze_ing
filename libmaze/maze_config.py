@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, model_validator
 from .color import Color
 from .wall_type import WallType
 from .coord import Coord
+from .maze_error import *
 
 
 class MazeConfig(BaseModel):
@@ -25,6 +26,7 @@ class MazeConfig(BaseModel):
     wall_type: WallType = WallType.SIMPLE
     wall_color: Color = Color.YELLOW
     wall_bkcolor: Color = Color.BG_BLUE
+    msg_error: str = ""
     attr: dict[str, Any] = {}
 
     @model_validator(mode='after')
@@ -62,28 +64,59 @@ class MazeConfig(BaseModel):
         coord: list[str] = []
         value_ok = True
         key = key.upper()
-        match key:
-            case "WIDTH":
-                self.width = int(value)
-            case "HEIGHT":
-                self.height = int(value)
-            case "ENTRY":
-                coord = value.partition(",")
-                self.entry.x = int(coord[0])
-                self.entry.y = int(coord[2])
-            case "EXIT":
-                coord = value.partition(",")
-                self.exit.x = int(coord[0])
-                self.exit.y = int(coord[2])
-            case "OUTPUT_FILE":
-                self.output_file = value.strip()
-            case "PERFECT":
-                self.perfect = False if value.strip().upper() == "FALSE"\
-                    else True
-            case "SEED":
-                self.seed = int(value)
-            case _:
-                value_ok = False
+        try:
+            match key:
+                case "WIDTH":
+                    self.width = int(value)
+                case "HEIGHT":
+                    self.height = int(value)
+                case "ENTRY":
+                    coord = value.partition(",")
+                    self.entry.x = int(coord[0])
+                    self.entry.y = int(coord[2])
+                    if not (0 <= self.entry.x < self.width
+                            and 0 <= self.entry.y < self.height):
+                        raise EntryNotInMaze
+                case "EXIT":
+                    coord = value.partition(",")
+                    self.exit.x = int(coord[0])
+                    self.exit.y = int(coord[2])
+                    if not (0 <= self.exit.x < self.width
+                            and 0 <= self.exit.y < self.height):
+                        raise ExitNotInMaze
+                case "OUTPUT_FILE":
+                    self.output_file = value.strip()
+                case "PERFECT":
+                    self.perfect = False if value.strip().upper() == "FALSE"\
+                        else True
+                case "SEED":
+                    self.seed = int(value)
+                case _:
+                    value_ok = False
+            if (self.entry.x, self.entry.y) == (self.exit.x, self.exit.y):
+                raise ExitegalEntry
+        except EntryNotInMaze as e:
+            self.msg_error = f"{e}"
+            self.entry.x = 0
+            self.entry.y = 0
+        except ExitNotInMaze as e:
+            self.msg_error = f"{e}"
+            self.exit.x = self.width - 1
+            self.exit.y = self.height -1
+        except ExitegalEntry as e:
+            self.msg_error = f"{e}"
+            self.entry.x = 0
+            self.entry.y = 0
+            self.exit.x = self.width - 1
+            self.exit.y = self.height -1
+        except EntryIn42Error as e:
+            self.msg_error = f"{e}"
+            self.entry.x = 0
+            self.entry.y = 0
+        except ExitIn42Error as e:
+            self.msg_error = f"{e}"
+            self.exit.x = self.width - 1
+            self.exit.y = self.height -1
         return (value_ok)
 
     def set_attr_to_dict(self) -> None:
@@ -110,3 +143,27 @@ class MazeConfig(BaseModel):
         print(f"SEED = {self.seed}")
         print("Configuration attributes dictionary :")
         print(f"obj.config.attr = {self.attr}")
+
+
+
+
+
+        # try:
+        #     if self.width < PATTERN_W + margin:
+        #         raise WidthToSmallFor42Error
+        #     if self.height < PATTERN_H + margin:
+        #         raise HeightToSmallFor42Error
+        # except MazeError as e:
+        #     self.msg_error = f"{e}"
+
+
+
+
+        #     if self.entry in self.reserved:
+        #         raise EntryIn42Error
+        #     if self.exit in self.reserved:
+        #         raise ExitIn42Error
+        # except MazeError as e:
+        #     self.msg_error = f"{e}"
+
+
