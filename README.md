@@ -28,11 +28,19 @@ make lint      # flake8 + mypy
 ```
 
 Or directly:
+- Create a virtual environment and install dependencies:
+```bash
+python3 -m venv venv_a_maze_ing
+source venv_a_maze_ing/bin/activate
+pip install -r requirements_a_maze_ing.txt
+```
+- Run the program:
 ```bash
 python3 a_maze_ing.py config.txt
 ```
 
 `config.txt` can be replaced with any file following the format below.
+
 
 ## Configuration file format
 
@@ -47,6 +55,25 @@ One `KEY=VALUE` pair per line. Lines starting with `#` are comments.
 | OUTPUT_FILE   | Output filename                  | `OUTPUT_FILE=maze.txt`|
 | PERFECT       | Perfect maze mode (True/False)   | `PERFECT=False`       |
 | SEED          | Seed for reproducible generation | `SEED=42`             |
+
+### Build the package from source
+```bash
+# In a virtualenv, from the root of the repository
+python3 -m venv build_venv
+source build_venv/bin/activate
+pip install build
+python -m build
+# Output files will be in dist/
+cp dist/mazegen-1.0.0-py3-none-any.whl .
+cp dist/mazegen-1.0.0.tar.gz .
+```
+
+### Install the package
+```bash
+pip install mazegen-1.0.0-py3-none-any.whl
+# or
+pip install mazegen-1.0.0.tar.gz
+```
 
 ## Maze generation algorithm
 
@@ -78,8 +105,6 @@ from mazegen import MazeGenerator
 generator = MazeGenerator(width=20, height=15, entry=(0, 0), exit=(19, 14),
                            seed=42, perfect=False)
 generator.generate()
-
-rows = generator.to_hexa_rows()     # hexadecimal grid rows
 path = generator.solution_path      # shortest path, as N/E/S/W letters
 ```
 
@@ -94,16 +119,26 @@ depends on this module — not the other way around.
 
 ## Team and project management
 
-- **[sansaidi]**: [role — e.g. maze generation, solving algorithm, tests]
-- **[sbeldjao]**: [role — e.g. config parsing, terminal display, Makefile]
+- **sansaidi**: maze generation and solving algorithm, tests, packaging (mazegen), README
+- **sbeldjao**: config parsing, terminal display, Makefile
 
-[Planning: comment vous aviez prévu de vous répartir le travail au départ,
-et comment ça a évolué — ex: "on avait prévu de finir le générateur en 3
-jours, ça a pris plus de temps à cause de X"]
+**Planning**: initial plan was parsing/config → perfect maze generation →
+display → non-perfect (Pac-Man) mode → path solving. Work was split so each
+person owned one module (generator vs. display) and developed/tested it
+independently. In practice, the generator and display phases overlapped more
+than planned, since the display needed a working generator interface early to
+start testing, which pushed some interface decisions earlier than expected.
 
-[Ce qui a bien marché / ce qui pourrait être amélioré — ex: travailler sur
-des branches séparées a évité les conflits, mais on aurait dû clarifier
-plus tôt les conventions d'interface entre nos deux modules]
+**What worked well**: working on separate branches per module avoided merge
+conflicts, and keeping the generator and display fully independent (one only
+exposes data, the other only consumes it) made both parts testable in
+isolation.
+
+**What could be improved**: the interface between the two modules (parameter
+names, coordinate conventions, how to access the solution) should have been
+agreed on explicitly before starting, rather than discovered through
+integration bugs afterward — clearer upfront communication would have saved
+debugging time later.
 
 Tools used: `pytest` for unit/integration tests, `maze_analyzer.py`
 (provided) to cross-check maze validity independently of our own tests,
