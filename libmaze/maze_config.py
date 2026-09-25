@@ -68,8 +68,16 @@ class MazeConfig(BaseModel):
             match key:
                 case "WIDTH":
                     self.width = int(value)
+                    if self.width < 0:
+                        raise WidthLessThan0Error
+                    # if self.width < PATTERN_W + margin:
+                    #     raise WidthToSmallFor42Error
                 case "HEIGHT":
                     self.height = int(value)
+                    if self.height < 0:
+                        raise HeightLessThan0Error
+                    # if self.height < PATTERN_H + margin:
+                    #    raise HeightToSmallFor42Error
                 case "ENTRY":
                     coord = value.partition(",")
                     self.entry.x = int(coord[0])
@@ -95,28 +103,31 @@ class MazeConfig(BaseModel):
                     value_ok = False
             if (self.entry.x, self.entry.y) == (self.exit.x, self.exit.y):
                 raise ExitegalEntry
-        except EntryNotInMaze as e:
-            self.msg_error = f"{e}"
-            self.entry.x = 0
-            self.entry.y = 0
-        except ExitNotInMaze as e:
-            self.msg_error = f"{e}"
-            self.exit.x = self.width - 1
-            self.exit.y = self.height -1
-        except ExitegalEntry as e:
-            self.msg_error = f"{e}"
-            self.entry.x = 0
-            self.entry.y = 0
-            self.exit.x = self.width - 1
-            self.exit.y = self.height -1
-        except EntryIn42Error as e:
-            self.msg_error = f"{e}"
-            self.entry.x = 0
-            self.entry.y = 0
-        except ExitIn42Error as e:
-            self.msg_error = f"{e}"
-            self.exit.x = self.width - 1
-            self.exit.y = self.height -1
+        except MazeError as e:
+            self.msg_error += f"{e}\n"
+            try:
+                raise e
+            except WidthLessThan0Error as e:
+                self.width = 16
+            except HeightLessThan0Error as e:
+                self.height = 16
+            except EntryNotInMaze as e:
+                self.entry.x = 0
+                self.entry.y = 0
+            except ExitNotInMaze as e:
+                self.exit.x = self.width - 1
+                self.exit.y = self.height -1
+            except ExitegalEntry as e:
+                self.entry.x = 0
+                self.entry.y = 0
+                self.exit.x = self.width - 1
+                self.exit.y = self.height -1
+            except EntryIn42Error as e:
+                self.entry.x = 0
+                self.entry.y = 0
+            except ExitIn42Error as e:
+                self.exit.x = self.width - 1
+                self.exit.y = self.height -1
         return (value_ok)
 
     def set_attr_to_dict(self) -> None:
