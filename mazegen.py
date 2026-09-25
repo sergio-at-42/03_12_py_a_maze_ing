@@ -140,11 +140,9 @@ class MazeGenerator:
 
         margin = 2  # on garde au moins 2 cellules de marge autour du motif
         if self.width < PATTERN_W + margin or self.height < PATTERN_H + margin:
-            print(
-                "Warning: maze too small to display the '42' pattern "
-                f"(needs at least {PATTERN_W + margin}x{PATTERN_H + margin})."
-            )
-            return set()
+            raise Exception("Warning: maze too small to display the '42' "
+                            "pattern (needs at least"
+                            f"{PATTERN_W + margin}x{PATTERN_H + margin}).")
 
         offset_x = (self.width - PATTERN_W) // 2
         offset_y = (self.height - PATTERN_H) // 2
