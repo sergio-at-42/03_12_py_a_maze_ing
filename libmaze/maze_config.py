@@ -14,7 +14,7 @@ class MazeConfig(BaseModel):
     entry: Coord = Coord(x=2, y=2)
     exit:  Coord = Coord(x=15, y=15)
     output_file: str = Field(default="maze.txt")
-    perfect: bool = Field(default=True)
+    perfect: bool = Field(default=False)
     argv: list[str] = []
     config_file_name: str = Field(default="")
     seed: int = Field(ge=0, default=16)
@@ -78,8 +78,8 @@ class MazeConfig(BaseModel):
             case "OUTPUT_FILE":
                 self.output_file = value.strip()
             case "PERFECT":
-                self.perfect = False if value.upper() == "FALSE" \
-                    else bool(value)
+                self.perfect = False if value.strip().upper() == "FALSE"\
+                    else True
             case "SEED":
                 self.seed = int(value)
             case _:
