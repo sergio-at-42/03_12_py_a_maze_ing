@@ -118,7 +118,7 @@ class MazeConfig(BaseModel):
                 case _:
                     value_ok = False
         except ValueError:
-            self.msg_error += "Value error in your configuration file, stupid user.\n"
+            self.msg_error += "Value error in your configuration file.\n"
         except MazeError as e:
             self.msg_error += f"{e}\n"
             try:
