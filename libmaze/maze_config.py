@@ -43,8 +43,8 @@ class MazeConfig(BaseModel):
             with open(self.config_file_name, "r") as config_file:
                 config_line = config_file.readline()
                 while config_line:
-                    key = config_line.partition("=")[0]
-                    value = config_line.partition("=")[2]
+                    key = config_line.partition("=")[0].strip()
+                    value = config_line.partition("=")[2].strip()
                     self.set_value_to_attr(key, value)
                     config_line = config_file.readline()
         except FileNotFoundError:
@@ -66,7 +66,7 @@ class MazeConfig(BaseModel):
             print(f"Usage: {self.argv[0].rpartition("/")[2]} <conf_file>")
             print("Default values used to create the maze.")
 
-    def set_value_to_attr(self, key: str, value: Any) -> bool:
+    def set_value_to_attr(self, key: str, value: str) -> bool:
         coord: list[str] = []
         value_ok = True
         key = key.upper()
@@ -85,7 +85,7 @@ class MazeConfig(BaseModel):
                     if self.height < PATTERN_H + 2:
                         raise HeightToSmallFor42Error
                 case "ENTRY":
-                    coord = value.partition(",")
+                    coord = list(value.partition(","))
                     self.entry.x = int(coord[0])
                     self.entry.y = int(coord[2])
                     if not (0 <= self.entry.x < self.width
@@ -97,7 +97,7 @@ class MazeConfig(BaseModel):
                             (self.exit.x, self.exit.y):
                         raise ExitegalEntry
                 case "EXIT":
-                    coord = value.partition(",")
+                    coord = list(value.partition(","))
                     self.exit.x = int(coord[0])
                     self.exit.y = int(coord[2])
                     if not (0 <= self.exit.x < self.width
@@ -117,7 +117,8 @@ class MazeConfig(BaseModel):
                     self.seed = int(value)
                 case _:
                     value_ok = False
-
+        except ValueError:
+            self.msg_error += "Value error in your configuration file, stupid user.\n"
         except MazeError as e:
             self.msg_error += f"{e}\n"
             try:

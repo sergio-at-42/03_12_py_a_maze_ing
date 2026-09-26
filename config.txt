@@ -1,5 +1,5 @@
 # Maze width
-WIDTH=24
+WIDTH = 32
 
 # Maze height
 HEIGHT=16
@@ -14,3 +14,5 @@ OUTPUT_FILE=maze.txt
 
 # Perfect maze
 PERFECT=False
+
+SEED=50

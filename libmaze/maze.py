@@ -117,11 +117,9 @@ class Maze():
                 # Write Entry
                 output_line = f"{self.config.entry.x},{self.config.entry.y}"
                 output_file.write(f"{output_line}\n")
-                output_file.write("\n")
                 # Write Exit
                 output_line = f"{self.config.exit.x},{self.config.exit.y}"
                 output_file.write(f"{output_line}\n")
-                output_file.write("\n")
                 # Write Path
                 output_line = "".join(direction
                                       for direction in self.path.direction)
