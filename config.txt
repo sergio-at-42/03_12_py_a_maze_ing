@@ -1,17 +1,16 @@
 # Maze width
-WIDTH=32
+WIDTH=24
 
 # Maze height
 HEIGHT=16
 
 # Maze entry
-ENTRY=4,5
-
+ENTRY=1,2
 # Maze exit
-EXIT=2,3
+EXIT=5,36
 
 # Maze exported File name
 OUTPUT_FILE=maze.txt
 
 # Perfect maze
-PERFECT=true
+PERFECT=False

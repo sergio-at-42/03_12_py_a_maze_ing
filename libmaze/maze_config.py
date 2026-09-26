@@ -5,6 +5,11 @@ from pydantic import BaseModel, Field, model_validator
 from .color import Color
 from .wall_type import WallType
 from .coord import Coord
+from mazegen import PATTERN_H, PATTERN_W
+from .maze_error import EntryIn42Error, EntryNotInMaze, ExitegalEntry, \
+    ExitIn42Error, ExitNotInMaze, WidthLessThan0Error, \
+    HeightLessThan0Error, MazeError, WidthSmallFor42Error, \
+    HeightToSmallFor42Error
 
 
 class MazeConfig(BaseModel):
@@ -25,6 +30,9 @@ class MazeConfig(BaseModel):
     wall_type: WallType = WallType.SIMPLE
     wall_color: Color = Color.YELLOW
     wall_bkcolor: Color = Color.BG_BLUE
+    msg_error: str = ""
+    msg_error_generator: str = ""
+    pattern42: set[tuple[int, int]] = set()
     attr: dict[str, Any] = {}
 
     @model_validator(mode='after')
@@ -62,28 +70,81 @@ class MazeConfig(BaseModel):
         coord: list[str] = []
         value_ok = True
         key = key.upper()
-        match key:
-            case "WIDTH":
-                self.width = int(value)
-            case "HEIGHT":
-                self.height = int(value)
-            case "ENTRY":
-                coord = value.partition(",")
-                self.entry.x = int(coord[0])
-                self.entry.y = int(coord[2])
-            case "EXIT":
-                coord = value.partition(",")
-                self.exit.x = int(coord[0])
-                self.exit.y = int(coord[2])
-            case "OUTPUT_FILE":
-                self.output_file = value.strip()
-            case "PERFECT":
-                self.perfect = False if value.strip().upper() == "FALSE"\
-                    else True
-            case "SEED":
-                self.seed = int(value)
-            case _:
-                value_ok = False
+        try:
+            match key:
+                case "WIDTH":
+                    self.width = int(value)
+                    if self.width < 0:
+                        raise WidthLessThan0Error
+                    if self.width < PATTERN_W + 2:
+                        raise WidthSmallFor42Error
+                case "HEIGHT":
+                    self.height = int(value)
+                    if self.height < 0:
+                        raise HeightLessThan0Error
+                    if self.height < PATTERN_H + 2:
+                        raise HeightToSmallFor42Error
+                case "ENTRY":
+                    coord = value.partition(",")
+                    self.entry.x = int(coord[0])
+                    self.entry.y = int(coord[2])
+                    if not (0 <= self.entry.x < self.width
+                            and 0 <= self.entry.y < self.height):
+                        raise EntryNotInMaze
+                    if (self.entry.x, self.entry.y) in self.pattern42:
+                        raise EntryIn42Error
+                    if (self.entry.x, self.entry.y) == \
+                            (self.exit.x, self.exit.y):
+                        raise ExitegalEntry
+                case "EXIT":
+                    coord = value.partition(",")
+                    self.exit.x = int(coord[0])
+                    self.exit.y = int(coord[2])
+                    if not (0 <= self.exit.x < self.width
+                            and 0 <= self.exit.y < self.height):
+                        raise ExitNotInMaze
+                    if (self.exit.x, self.exit.y) in self.pattern42:
+                        raise ExitIn42Error
+                    if (self.entry.x, self.entry.y) == \
+                            (self.exit.x, self.exit.y):
+                        raise ExitegalEntry
+                case "OUTPUT_FILE":
+                    self.output_file = value.strip()
+                case "PERFECT":
+                    self.perfect = False if value.strip().upper() == "FALSE"\
+                        else True
+                case "SEED":
+                    self.seed = int(value)
+                case _:
+                    value_ok = False
+
+        except MazeError as e:
+            self.msg_error += f"{e}\n"
+            try:
+                raise e
+            except WidthLessThan0Error:
+                self.width = 16
+            except HeightLessThan0Error:
+                self.height = 16
+            except EntryNotInMaze:
+                self.entry.x = 0
+                self.entry.y = 0
+            except ExitNotInMaze:
+                self.exit.x = self.width - 1
+                self.exit.y = self.height - 1
+            except ExitegalEntry:
+                self.entry.x = 0
+                self.entry.y = 0
+                self.exit.x = self.width - 1
+                self.exit.y = self.height - 1
+            except EntryIn42Error:
+                self.entry.x = 0
+                self.entry.y = 0
+            except ExitIn42Error:
+                self.exit.x = self.width - 1
+                self.exit.y = self.height - 1
+            except WidthSmallFor42Error, HeightToSmallFor42Error:
+                pass
         return (value_ok)
 
     def set_attr_to_dict(self) -> None:

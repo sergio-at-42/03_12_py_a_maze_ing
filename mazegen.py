@@ -79,6 +79,7 @@ class MazeGenerator:
         self.exit = exit
         self.seed = seed
         self.perfect = perfect
+        self.msg_error: str = ""
         # grid representation of the maze, where each cell is represented by a
         # 4-bit integer
         self.grid: list[list[int]] = [
@@ -140,9 +141,10 @@ class MazeGenerator:
 
         margin = 2  # on garde au moins 2 cellules de marge autour du motif
         if self.width < PATTERN_W + margin or self.height < PATTERN_H + margin:
-            raise Exception("Warning: maze too small to display the '42' "
-                            "pattern (needs at least"
-                            f"{PATTERN_W + margin}x{PATTERN_H + margin}).")
+            print("Warning: maze too small to display the '42' "
+                  "pattern (needs at least"
+                  f"{PATTERN_W + margin}x{PATTERN_H + margin}).")
+            return set()
 
         offset_x = (self.width - PATTERN_W) // 2
         offset_y = (self.height - PATTERN_H) // 2
@@ -441,12 +443,21 @@ class MazeGenerator:
         return (self.width // 2, self.height // 2)
 
     def open_center(self) -> None:
-        """Ensure the center is an actual corridor. We require at least two
-        connections."""
+        """Ensure the center is a corridor with at least two connections."""
 
         cx, cy = self.center()
+
         if (cx, cy) in self.reserved:
             return
+
+        neighbors = self.get_closed_neighbors(cx, cy)
+        self.rng.shuffle(neighbors)
+
+        for direction, nx, ny in neighbors:
+            if self.degree(cx, cy) >= 2:
+                break
+
+            self.can_open_wall(cx, cy, direction, nx, ny)
 
     def dead_end_cells(self) -> list[tuple[int, int]]:
         """Return all current dead-end cells."""
@@ -539,16 +550,16 @@ class MazeGenerator:
     def validate(self) -> None:
         if not (0 <= self.entry[0] < self.width
                 and 0 <= self.entry[1] < self.height):
-            raise ValueError("Entry is outside the maze.")
+            self.msg_error = "Entry is outside the maze."
         if not (0 <= self.exit[0] < self.width
                 and 0 <= self.exit[1] < self.height):
-            raise ValueError("Exit is outside the maze.")
+            self.msg_error = "Exit is outside the maze."
         if self.entry == self.exit:
-            raise ValueError("Entry and exit must be different.")
+            self.msg_error = "Entry and exit must be different."
         if self.entry in self.reserved:
-            raise ValueError("Entry is inside the 42 pattern.")
+            self.msg_error = "Entry is inside the 42 pattern."
         if self.exit in self.reserved:
-            raise ValueError("Exit is inside the 42 pattern.")
+            self.msg_error = "Exit is inside the 42 pattern."
 
     def generate(self) -> None:
         """Generate the maze."""
