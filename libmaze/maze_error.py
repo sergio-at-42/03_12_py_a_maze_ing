@@ -35,13 +35,13 @@ class ExitegalEntry(MazeError):
 class WidthSmallFor42Error(MazeError):
     """Base class for entry point in 42 related errors."""
     def __init__(self) -> None:
-        super().__init__("Width small for 42, need W=11 ")
+        super().__init__("Width too small for 42, need W=11 ")
 
 
 class HeightToSmallFor42Error(MazeError):
     """Base class for entry point in 42 related errors."""
     def __init__(self) -> None:
-        super().__init__("Height small for 42, needH=7")
+        super().__init__("Height too small for 42, needH=7")
 
 
 class WidthLessThan0Error(MazeError):
