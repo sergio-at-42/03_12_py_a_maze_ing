@@ -106,21 +106,21 @@ class Maze():
         output_line: str = ""
         try:
             with open(self.config.output_file, "w") as output_file:
-                output_file.write("# Maze generated with a_maze_ing project\n")
+                # output_file.write("# Maze generated with a_maze_ing project\n")
                 for line in range(len(self.generator.grid)):
                     output_line = "".join(format(c, "X")
                                           for c in self.generator.grid[line])
                     output_file.write(f"{output_line}\n")
                 output_file.write("\n")
-                output_file.write("# Entry\n")
+                # output_file.write("# Entry\n")
                 output_line = f"{self.config.entry.x},{self.config.entry.y}"
                 output_file.write(f"{output_line}\n")
                 output_file.write("\n")
-                output_file.write("# Exit\n")
+                # output_file.write("# Exit\n")
                 output_line = f"{self.config.exit.x},{self.config.exit.y}"
                 output_file.write(f"{output_line}\n")
                 output_file.write("\n")
-                output_file.write("# Path from Entry to Exit\n")
+                # output_file.write("# Path from Entry to Exit\n")
                 output_line = "".join(direction
                                       for direction in self.path.direction)
                 output_file.write(f"{output_line}\n")
