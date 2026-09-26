@@ -1,0 +1,16 @@
+# Maze width
+WIDTH=24
+
+# Maze height
+HEIGHT=16
+
+# Maze entry
+ENTRY=1,2
+# Maze exit
+EXIT=5,36
+
+# Maze exported File name
+OUTPUT_FILE=maze.txt
+
+# Perfect maze
+PERFECT=False

@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+
+from libmaze import Maze, MazeMenu, Color
+
+
+def main() -> None:
+    print(Color.CURSOR_OFF)
+    my_maze: Maze = Maze()
+    my_menu: MazeMenu = MazeMenu(my_maze)
+    my_maze.display()
+    my_menu.input_loop()
+    print(f"\033[{my_maze.config.height*2+12};1H", end="")
+    print(Color.RESET.value)
+    print(Color.CURSOR_ON.value)
+
+
+if __name__ == "__main__":
+    main()
