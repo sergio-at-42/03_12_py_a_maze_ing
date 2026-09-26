@@ -143,6 +143,7 @@ class MazeGenerator:
             raise Exception("Warning: maze too small to display the '42' "
                             "pattern (needs at least"
                             f"{PATTERN_W + margin}x{PATTERN_H + margin}).")
+            return set()
 
         offset_x = (self.width - PATTERN_W) // 2
         offset_y = (self.height - PATTERN_H) // 2
@@ -441,12 +442,21 @@ class MazeGenerator:
         return (self.width // 2, self.height // 2)
 
     def open_center(self) -> None:
-        """Ensure the center is an actual corridor. We require at least two
-        connections."""
+        """Ensure the center is a corridor with at least two connections."""
 
         cx, cy = self.center()
+
         if (cx, cy) in self.reserved:
             return
+
+        neighbors = self.get_closed_neighbors(cx, cy)
+        self.rng.shuffle(neighbors)
+
+        for direction, nx, ny in neighbors:
+            if self.degree(cx, cy) >= 2:
+                break
+
+            self.can_open_wall(cx, cy, direction, nx, ny)
 
     def dead_end_cells(self) -> list[tuple[int, int]]:
         """Return all current dead-end cells."""
