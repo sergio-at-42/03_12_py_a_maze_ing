@@ -34,7 +34,10 @@ class Maze():
         self.generator.exit = (self.config.exit.x, self.config.exit.y)
         self.generator.seed = self.config.seed
         self.generator.perfect = self.config.perfect
+        self.config.msg_error_generator = ""
         self.generator.generate()
+        self.config.msg_error_generator = f"{self.generator.msg_error}\n"
+        self.path.direction = self.generator.solution_path
         for line in range(len(self.generator.grid)):
             for col in range(len(self.generator.grid[line])):
                 cell = self.generator.grid[line][col]
@@ -72,7 +75,6 @@ class Maze():
                 print(self.construct_wall(line, col), end="")
             print()
         if self.path.visible:
-            self.path.direction = self.generator.solution_path
             self.path.display()
             self.path.display_entry()
             self.path.display_exit()
@@ -106,21 +108,21 @@ class Maze():
         output_line: str = ""
         try:
             with open(self.config.output_file, "w") as output_file:
-                # output_file.write("# Maze generated with a_maze_ing project\n")
+                # Write Maze
                 for line in range(len(self.generator.grid)):
                     output_line = "".join(format(c, "X")
                                           for c in self.generator.grid[line])
                     output_file.write(f"{output_line}\n")
                 output_file.write("\n")
-                # output_file.write("# Entry\n")
+                # Write Entry
                 output_line = f"{self.config.entry.x},{self.config.entry.y}"
                 output_file.write(f"{output_line}\n")
                 output_file.write("\n")
-                # output_file.write("# Exit\n")
+                # Write Exit
                 output_line = f"{self.config.exit.x},{self.config.exit.y}"
                 output_file.write(f"{output_line}\n")
                 output_file.write("\n")
-                # output_file.write("# Path from Entry to Exit\n")
+                # Write Path
                 output_line = "".join(direction
                                       for direction in self.path.direction)
                 output_file.write(f"{output_line}\n")

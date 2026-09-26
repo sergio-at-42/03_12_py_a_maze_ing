@@ -1,13 +1,13 @@
 # Maze width
-WIDTH=5
+WIDTH=11
 
 # Maze height
-HEIGHT=6
+HEIGHT=7
 
 # Maze entry
 ENTRY=1,2
 # Maze exit
-EXIT=5,3
+EXIT=5,36
 
 # Maze exported File name
 OUTPUT_FILE=maze.txt

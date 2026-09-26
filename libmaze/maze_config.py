@@ -31,6 +31,8 @@ class MazeConfig(BaseModel):
     wall_color: Color = Color.YELLOW
     wall_bkcolor: Color = Color.BG_BLUE
     msg_error: str = ""
+    msg_error_generator: str = ""
+    pattern42: set[tuple[int, int]] = set()
     attr: dict[str, Any] = {}
 
     @model_validator(mode='after')
@@ -89,6 +91,8 @@ class MazeConfig(BaseModel):
                     if not (0 <= self.entry.x < self.width
                             and 0 <= self.entry.y < self.height):
                         raise EntryNotInMaze
+                    if (self.entry.x, self.entry.y) in self.pattern42:
+                        raise EntryIn42Error
                     if (self.entry.x, self.entry.y) == \
                             (self.exit.x, self.exit.y):
                         raise ExitegalEntry
@@ -99,6 +103,8 @@ class MazeConfig(BaseModel):
                     if not (0 <= self.exit.x < self.width
                             and 0 <= self.exit.y < self.height):
                         raise ExitNotInMaze
+                    if (self.exit.x, self.exit.y) in self.pattern42:
+                        raise ExitIn42Error
                     if (self.entry.x, self.entry.y) == \
                             (self.exit.x, self.exit.y):
                         raise ExitegalEntry
@@ -165,14 +171,3 @@ class MazeConfig(BaseModel):
         print(f"SEED = {self.seed}")
         print("Configuration attributes dictionary :")
         print(f"obj.config.attr = {self.attr}")
-
-
-
-        #     if self.entry in self.reserved:
-        #         raise EntryIn42Error
-        #     if self.exit in self.reserved:
-        #         raise ExitIn42Error
-        # except MazeError as e:
-        #     self.msg_error = f"{e}"
-
-
