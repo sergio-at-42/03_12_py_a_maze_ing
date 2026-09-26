@@ -2,12 +2,12 @@
 WIDTH = 32
 
 # Maze height
-HEIGHT=16
+HEIGHT= toto
 
 # Maze entry
 ENTRY=1,2
 # Maze exit
-EXIT=5,36
+EXIT = 5
 
 # Maze exported File name
 OUTPUT_FILE=maze.txt

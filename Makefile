@@ -11,7 +11,7 @@ $(VENV):
 # Install activity dependencies using pip, uv, pipx, or any other package manager of your choice.
 install : $(VENV)
 	$(PIP) install --upgrade pip
-	$(PIP) install --requirement requirements_a_maze_ing.txt
+	$(PIP) install --requirement requirements.txt
 
 # Execute the main script of your activity (e.g., via Python interpreter).
 run :$(VENV)
