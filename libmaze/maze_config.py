@@ -14,8 +14,8 @@ from .maze_error import EntryIn42Error, EntryNotInMaze, ExitegalEntry, \
 
 class MazeConfig(BaseModel):
 
-    width: int = Field(ge=0, default=16)
-    height: int = Field(ge=0, default=16)
+    width: int = Field(ge=2, default=16)
+    height: int = Field(ge=2, default=16)
     entry: Coord = Coord(x=2, y=2)
     exit:  Coord = Coord(x=15, y=15)
     output_file: str = Field(default="maze.txt")
@@ -74,13 +74,13 @@ class MazeConfig(BaseModel):
             match key:
                 case "WIDTH":
                     self.width = int(value)
-                    if self.width < 0:
+                    if self.width < 2:
                         raise WidthLessThan0Error
                     if self.width < PATTERN_W + 2:
                         raise WidthSmallFor42Error
                 case "HEIGHT":
                     self.height = int(value)
-                    if self.height < 0:
+                    if self.height < 2:
                         raise HeightLessThan0Error
                     if self.height < PATTERN_H + 2:
                         raise HeightToSmallFor42Error
@@ -111,8 +111,8 @@ class MazeConfig(BaseModel):
                 case "OUTPUT_FILE":
                     self.output_file = value.strip()
                 case "PERFECT":
-                    self.perfect = False if value.strip().upper() == "FALSE"\
-                        else True
+                    self.perfect = True if value.strip().upper() == "TRUE"\
+                        else False
                 case "SEED":
                     self.seed = int(value)
                 case _:

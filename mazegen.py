@@ -87,6 +87,7 @@ class MazeGenerator:
             for _ in range(self.height)
         ]
         self._solution_path: list[str] = []
+        # self.reserved: set[tuple[int, int]] = self.set_pattern()
 
     def init_grid(self) -> None:
         self.grid = [[0b1111 for _ in range(self.width)]
