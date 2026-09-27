@@ -5,7 +5,7 @@ WIDTH = 32
 HEIGHT= toto
 
 # Maze entry
-ENTRY=1,2
+ENTRY=14,7
 # Maze exit
 EXIT = 5
 

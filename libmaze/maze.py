@@ -76,8 +76,8 @@ class Maze():
             print()
         if self.path.visible:
             self.path.display()
-            self.path.display_entry()
-            self.path.display_exit()
+        self.path.display_entry()
+        self.path.display_exit()
 
     def construct_wall(self, line: int, col: int) -> str:
         if self.grid[line][col] < 0:
