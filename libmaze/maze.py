@@ -34,8 +34,10 @@ class Maze():
         self.generator.perfect = self.config.perfect
         self.config.msg_error_generator = ""
         self.config.pattern42 = self.generator.set_pattern()
-        self.config.set_value_to_attr("ENTRY", f"{self.config.entry.x},{self.config.entry.y}")
-        self.config.set_value_to_attr("EXIT", f"{self.config.exit.x},{self.config.exit.y}")
+        self.config.set_value_to_attr(
+            "ENTRY", f"{self.config.entry.x},{self.config.entry.y}")
+        self.config.set_value_to_attr(
+            "EXIT", f"{self.config.exit.x},{self.config.exit.y}")
         self.generator.entry = (self.config.entry.x, self.config.entry.y)
         self.generator.exit = (self.config.exit.x, self.config.exit.y)
         self.generator.generate()
