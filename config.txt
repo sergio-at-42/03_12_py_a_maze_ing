@@ -1,5 +1,5 @@
 # Maze width
-WIDTH = 0
+WIDTH = 12
 
 # Maze height
 HEIGHT= 11

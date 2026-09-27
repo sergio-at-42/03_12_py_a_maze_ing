@@ -1,6 +1,6 @@
 from typing import Any
 import sys
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, model_validator, ValidationError
 
 from .color import Color
 from .wall_type import WallType
@@ -16,7 +16,7 @@ class MazeConfig(BaseModel):
 
     width: int = Field(ge=2, default=16)
     height: int = Field(ge=2, default=16)
-    entry: Coord = Coord(x=2, y=2)
+    entry: Coord = Coord(x=0, y=0)
     exit:  Coord = Coord(x=15, y=15)
     output_file: str = Field(default="maze.txt")
     perfect: bool = Field(default=False)
@@ -117,7 +117,7 @@ class MazeConfig(BaseModel):
                     self.seed = int(value)
                 case _:
                     value_ok = False
-        except ValueError:
+        except ValueError, ValidationError:
             self.msg_error += "Value error in your configuration file.\n"
         except MazeError as e:
             self.msg_error += f"{e}\n"

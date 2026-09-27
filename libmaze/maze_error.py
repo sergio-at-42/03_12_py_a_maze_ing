@@ -47,12 +47,12 @@ class HeightToSmallFor42Error(MazeError):
 class WidthLessThan0Error(MazeError):
     """Base class for entry point in 42 related errors."""
     def __init__(self) -> None:
-        super().__init__("Width to small. Must be over 0 !"
+        super().__init__("Width to small. Must be over 2 !"
                          " Auto configurated width")
 
 
 class HeightLessThan0Error(MazeError):
     """Base class for entry point in 42 related errors."""
     def __init__(self) -> None:
-        super().__init__("Height to small. Must be over 0 !"
+        super().__init__("Height to small. Must be over 2 !"
                          "Auto configurated height")
