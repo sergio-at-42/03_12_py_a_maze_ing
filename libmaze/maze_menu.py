@@ -76,6 +76,8 @@ class MazeMenu():
                 self.maze.new_maze()
             case "B":
                 self.maze.config.perfect = not (self.maze.config.perfect)
+                self.maze.path.speed = 7
+                self.maze.new_maze()
             case "Z":
                 self.maze.write_output_file()
             case "X":
@@ -176,6 +178,8 @@ class MazeMenu():
         print(f"{Color.RESET.value}{Color.CURSOR_OFF.value}")
 
         # Error
+        self.error_text = self.maze.config.msg_error \
+            + self.maze.config.msg_error_generator
         self.display_error() if len(self.error_text) else self.hide_error()
 
     def display_frame_side(self) -> None:

@@ -9,8 +9,7 @@ def main() -> None:
     my_menu: MazeMenu = MazeMenu(my_maze)
     my_maze.display()
     my_menu.input_loop()
-    my_maze.write_output_file()
-    print(f"\033[{my_maze.config.height*2+10};1H", end="")
+    print(f"\033[{my_maze.config.height*2+12};1H", end="")
     print(Color.RESET.value)
     print(Color.CURSOR_ON.value)
 
